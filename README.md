@@ -22,5 +22,5 @@ Move to folder where you want the repo to be created:
 In a separate terminal execute:
 `$ npx hardhat run ./scripts/deploy.js --network localhost`
 
-### 7. Start frontend
+### 6. Start frontend
 `$ npm run start`

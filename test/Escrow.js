@@ -7,31 +7,31 @@ const tokens = (n) => {
 
 describe('Escrow', () => {
     let buyer, seller, inspector, lender
-    let realEstate, escrow
+    let fantombnb, escrow
 
     beforeEach(async () => {
         // Setup accounts
         [buyer, seller, inspector, lender] = await ethers.getSigners()
 
         // Deploy Real Estate
-        const RealEstate = await ethers.getContractFactory('RealEstate')
-        realEstate = await RealEstate.deploy()
+        const FantomBNB = await ethers.getContractFactory('FantomBNB')
+        fantombnb = await FantomBNB.deploy()
 
         // Mint 
-        let transaction = await realEstate.connect(seller).mint("https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS")
+        let transaction = await fantombnb.connect(seller).mint("https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS")
         await transaction.wait()
 
         // Deploy Escrow
         const Escrow = await ethers.getContractFactory('Escrow')
         escrow = await Escrow.deploy(
-            realEstate.address,
+            fantombnb.address,
             seller.address,
             inspector.address,
             lender.address
         )
 
         // Approve Property
-        transaction = await realEstate.connect(seller).approve(escrow.address, 1)
+        transaction = await fantombnb.connect(seller).approve(escrow.address, 1)
         await transaction.wait()
 
         // List Property
@@ -42,7 +42,7 @@ describe('Escrow', () => {
     describe('Deployment', () => {
         it('Returns NFT address', async () => {
             const result = await escrow.nftAddress()
-            expect(result).to.be.equal(realEstate.address)
+            expect(result).to.be.equal(fantombnb.address)
         })
 
         it('Returns seller', async () => {
@@ -83,7 +83,7 @@ describe('Escrow', () => {
         })
 
         it('Updates ownership', async () => {
-            expect(await realEstate.ownerOf(1)).to.be.equal(escrow.address)
+            expect(await fantombnb.ownerOf(1)).to.be.equal(escrow.address)
         })
     })
 
@@ -154,7 +154,7 @@ describe('Escrow', () => {
         })
 
         it('Updates ownership', async () => {
-            expect(await realEstate.ownerOf(1)).to.be.equal(buyer.address)
+            expect(await fantombnb.ownerOf(1)).to.be.equal(buyer.address)
         })
 
         it('Updates balance', async () => {
