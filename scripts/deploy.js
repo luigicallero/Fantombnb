@@ -15,22 +15,22 @@ async function main() {
   const [buyer, seller, inspector, lender] = await ethers.getSigners()
 
   // Deploy Real Estate
-  const RealEstate = await ethers.getContractFactory('RealEstate')
-  const realEstate = await RealEstate.deploy()
-  await realEstate.deployed()
+  const FantomBNB = await ethers.getContractFactory('FantomBNB')
+  const fantombnb = await FantomBNB.deploy()
+  await fantombnb.deployed()
 
-  console.log(`Deployed Real Estate Contract at: ${realEstate.address}`)
+  console.log(`Deployed Real Estate Contract at: ${fantombnb.address}`)
   console.log(`Minting 3 properties...\n`)
 
   for (let i = 0; i < 3; i++) {
-    const transaction = await realEstate.connect(seller).mint(`https://ipfs.io/ipfs/QmQVcpsjrA6cr1iJjZAodYwmPekYgbnXGo4DFubJiLc2EB/${i + 1}.json`)
+    const transaction = await fantombnb.connect(seller).mint(`https://ipfs.io/ipfs/QmQVcpsjrA6cr1iJjZAodYwmPekYgbnXGo4DFubJiLc2EB/${i + 1}.json`)
     await transaction.wait()
   }
 
   // Deploy Escrow
   const Escrow = await ethers.getContractFactory('Escrow')
   const escrow = await Escrow.deploy(
-    realEstate.address,
+    fantombnb.address,
     seller.address,
     inspector.address,
     lender.address
@@ -42,7 +42,7 @@ async function main() {
 
   for (let i = 0; i < 3; i++) {
     // Approve properties...
-    let transaction = await realEstate.connect(seller).approve(escrow.address, i + 1)
+    let transaction = await fantombnb.connect(seller).approve(escrow.address, i + 1)
     await transaction.wait()
   }
 
