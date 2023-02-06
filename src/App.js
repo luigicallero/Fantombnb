@@ -63,6 +63,7 @@ function App() {
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
+      <br></br>
       <Search />
 
       <div className='cards__section'>
