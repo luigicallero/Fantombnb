@@ -7,7 +7,7 @@ import Search from './components/Search';
 import Home from './components/Home';
 
 // ABIs
-import RealEstate from './abis/RealEstate.json'
+import FantomBNB from './abis/FantomBNB.json'
 import Escrow from './abis/Escrow.json'
 
 // Config
@@ -27,13 +27,12 @@ function App() {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     setProvider(provider)
     const network = await provider.getNetwork()
-
-    const realEstate = new ethers.Contract(config[network.chainId].realEstate.address, RealEstate, provider)
-    const totalSupply = await realEstate.totalSupply()
+    const fantomBNB = new ethers.Contract(config[network.chainId].fantomBNB.address, FantomBNB, provider)
+    const totalSupply = await fantomBNB.totalSupply()
     const homes = []
 
     for (var i = 1; i <= totalSupply; i++) {
-      const uri = await realEstate.tokenURI(i)
+      const uri = await fantomBNB.tokenURI(i)
       const response = await fetch(uri)
       const metadata = await response.json()
       homes.push(metadata)
