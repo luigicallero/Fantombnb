@@ -109,3 +109,14 @@ Update file ./src/config.json with corresponding network ID and with contract ad
     }
 }
 ```
+
+---
+## Useful tools for testing
+### Fake Location Generator
+
+https://fakerjs.dev/api/address.html#city
+
+## Useful links:
+
+Dapp University Real State with NFTs: 
+https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s

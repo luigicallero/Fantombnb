@@ -14,12 +14,12 @@ async function main() {
   // Setup accounts
   const [buyer, seller, inspector, lender] = await ethers.getSigners()
 
-  // Deploy Real Estate
+  // Deploy FantomBNB
   const FantomBNB = await ethers.getContractFactory('FantomBNB')
   const fantombnb = await FantomBNB.deploy()
   await fantombnb.deployed()
 
-  console.log(`Deployed Real Estate Contract at: ${fantombnb.address}`)
+  console.log(`Deployed FantomBNB Contract at: ${fantombnb.address}`)
   console.log(`Minting 3 properties...\n`)
 
   for (let i = 0; i < 3; i++) {
