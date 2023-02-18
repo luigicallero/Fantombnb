@@ -6,12 +6,12 @@ const tokens = (n) => {
 }
 
 describe('Escrow', () => {
-    let buyer, seller, inspector, lender
+    let buyer, seller
     let fantombnb, escrow
 
     beforeEach(async () => {
         // Setup accounts
-        [buyer, seller, inspector, lender] = await ethers.getSigners()
+        [buyer, seller] = await ethers.getSigners()
 
         // Deploy Real Estate
         const FantomBNB = await ethers.getContractFactory('FantomBNB')
@@ -25,9 +25,7 @@ describe('Escrow', () => {
         const Escrow = await ethers.getContractFactory('Escrow')
         escrow = await Escrow.deploy(
             fantombnb.address,
-            seller.address,
-            inspector.address,
-            lender.address
+            seller.address
         )
 
         // Approve Property
@@ -49,16 +47,6 @@ describe('Escrow', () => {
             const result = await escrow.seller()
             expect(result).to.be.equal(seller.address)
         })
-
-        it('Returns inspector', async () => {
-            const result = await escrow.inspector()
-            expect(result).to.be.equal(inspector.address)
-        })
-
-        it('Returns lender', async () => {
-            const result = await escrow.lender()
-            expect(result).to.be.equal(lender.address)
-        })
     })
 
     describe('Listing', () => {
@@ -79,7 +67,7 @@ describe('Escrow', () => {
 
         it('Returns escrow amount', async () => {
             const result = await escrow.escrowAmount(1)
-            expect(result).to.be.equal(tokens(5))
+            expect(result).to.be.equal(tokens(5)) // could be a percentage
         })
 
         it('Updates ownership', async () => {
@@ -99,18 +87,6 @@ describe('Escrow', () => {
         })
     })
 
-    describe('Inspection', () => {
-        beforeEach(async () => {
-            const transaction = await escrow.connect(inspector).updateInspectionStatus(1, true)
-            await transaction.wait()
-        })
-
-        it('Updates inspection status', async () => {
-            const result = await escrow.inspectionPassed(1)
-            expect(result).to.be.equal(true)
-        })
-    })
-
     describe('Approval', () => {
         beforeEach(async () => {
             let transaction = await escrow.connect(buyer).approveSale(1)
@@ -118,15 +94,11 @@ describe('Escrow', () => {
 
             transaction = await escrow.connect(seller).approveSale(1)
             await transaction.wait()
-
-            transaction = await escrow.connect(lender).approveSale(1)
-            await transaction.wait()
         })
 
         it('Updates approval status', async () => {
             expect(await escrow.approval(1, buyer.address)).to.be.equal(true)
             expect(await escrow.approval(1, seller.address)).to.be.equal(true)
-            expect(await escrow.approval(1, lender.address)).to.be.equal(true)
         })
     })
 
@@ -135,19 +107,13 @@ describe('Escrow', () => {
             let transaction = await escrow.connect(buyer).depositEarnest(1, { value: tokens(5) })
             await transaction.wait()
 
-            transaction = await escrow.connect(inspector).updateInspectionStatus(1, true)
-            await transaction.wait()
-
             transaction = await escrow.connect(buyer).approveSale(1)
             await transaction.wait()
 
             transaction = await escrow.connect(seller).approveSale(1)
             await transaction.wait()
 
-            transaction = await escrow.connect(lender).approveSale(1)
-            await transaction.wait()
-
-            await lender.sendTransaction({ to: escrow.address, value: tokens(5) })
+            await buyer.sendTransaction({ to: escrow.address, value: tokens(5) })
 
             transaction = await escrow.connect(seller).finalizeSale(1)
             await transaction.wait()

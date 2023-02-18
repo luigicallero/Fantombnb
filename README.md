@@ -2,7 +2,7 @@
 Fantom blockchain version of the famous Airbnb application
 
 
-## Setting Up
+## Setting Up on Hardhat
 ### 1. Clone/Download the Repository
 
 Move to folder where you want the repo to be created:
@@ -22,11 +22,20 @@ Move to folder where you want the repo to be created:
 In a separate terminal execute:
 `$ npx hardhat run ./scripts/deploy.js --network localhost`
 
-### 6. Start frontend
+### 6. Configure Metamask for Hardhat
+You need to both configure Hardhat network and import Hardhat accounts to Metamask.
+
+Here is a couple of links explaining how:
+
+[Chainstack documentation](https://support.chainstack.com/hc/en-us/articles/4408642503449-Using-MetaMask-with-a-Hardhat-node)
+
+[Medium note](https://medium.com/@kaishinaw/connecting-metamask-with-a-local-hardhat-network-7d8cea604dc6#:~:text=Chain%20ID%3A%2031337%20%E2%80%94%20This%20is,that%20is%20implemented%20by%20Hardhat.)
+
+### 7. Start frontend
 `$ npm run start`
 
 ---
-> ### Other Blockchains
+## Settings for another Blockchains
 If running this Dapp against other blockchains, you will need to modify the following files
 
 ### 1. Add the appropiate blockchain information on the hardhat config file (hardhat.config.js)
@@ -120,3 +129,7 @@ https://fakerjs.dev/api/address.html#city
 
 Dapp University Real State with NFTs: 
 https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
+
+## To Dos:
+* Frontend to remove Buy button
+* Dapp Wiki Web update: English, remove resources and add 30secs speach

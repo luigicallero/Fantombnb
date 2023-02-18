@@ -34,19 +34,19 @@ contract Escrow {
     mapping(uint256 => uint256) public purchasePrice;
     mapping(uint256 => uint256) public escrowAmount;
     mapping(uint256 => address) public buyer;
-    mapping(uint256 => bool) public inspectionPassed;
+    //mapping(uint256 => bool) public inspectionPassed;
     mapping(uint256 => mapping(address => bool)) public approval;
 
     constructor(
         address _nftAddress,
-        address payable _seller,
-        address _inspector,
-        address _lender
+        address payable _seller
+        // address _inspector,
+        // address _lender
     ) {
         nftAddress = _nftAddress;
         seller = _seller;
-        inspector = _inspector;
-        lender = _lender;
+        // inspector = _inspector;
+        // lender = _lender;
     }
 
     function list(
@@ -70,12 +70,12 @@ contract Escrow {
     }
 
     // Update Inspection Status (only inspector)
-    function updateInspectionStatus(uint256 _nftID, bool _passed)
-        public
-        onlyInspector
-    {
-        inspectionPassed[_nftID] = _passed;
-    }
+    // function updateInspectionStatus(uint256 _nftID, bool _passed)
+    //     public
+    //     onlyInspector
+    // {
+    //     inspectionPassed[_nftID] = _passed;
+    // }
 
     // Approve Sale
     function approveSale(uint256 _nftID) public {
@@ -89,10 +89,10 @@ contract Escrow {
     // -> Transfer NFT to buyer
     // -> Transfer Funds to Seller
     function finalizeSale(uint256 _nftID) public {
-        require(inspectionPassed[_nftID]);
+//        require(inspectionPassed[_nftID]);
         require(approval[_nftID][buyer[_nftID]]);
         require(approval[_nftID][seller]);
-        require(approval[_nftID][lender]);
+        //require(approval[_nftID][lender]);
         require(address(this).balance >= purchasePrice[_nftID]);
 
         isListed[_nftID] = false;
@@ -106,9 +106,9 @@ contract Escrow {
     }
 
     // Cancel Sale (handle earnest deposit)
-    // -> if inspection status is not approved, then refund, otherwise send to seller
+    // -> if approval status is not approved, then refund, otherwise send to seller
     function cancelSale(uint256 _nftID) public {
-        if (inspectionPassed[_nftID] == false) {
+        if (approval[_nftID][seller] == false) {
             payable(buyer[_nftID]).transfer(address(this).balance);
         } else {
             payable(seller).transfer(address(this).balance);
@@ -121,3 +121,8 @@ contract Escrow {
         return address(this).balance;
     }
 }
+
+
+// Missing events
+// Missing buyer, seller identification - should be seemless: if I hit buy then I am buyer (unless I own the NFT)
+// Need to remove the lender and inspector of the code
