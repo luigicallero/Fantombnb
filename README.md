@@ -127,8 +127,10 @@ https://fakerjs.dev/api/address.html#city
 
 ## Useful links:
 
-Dapp University Real State with NFTs: 
+* Dapp University Real State with NFTs: 
 https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
+* Bumpkins Contract (role based, royalty, etc): https://polygonscan.com/token/0x624e4fa6980afcf8ea27bfe08e2fb5979b64df1c?a=28682#code#L189
+
 
 ## To Dos:
 * Frontend to remove Buy button

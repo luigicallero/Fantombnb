@@ -38,7 +38,7 @@ async function main() {
   await escrow.deployed()
 
   console.log(`Deployed Escrow Contract at: ${escrow.address}`)
-  console.log(`Listing 3 properties...\n`)
+  console.log(`Setting for Rent 3 properties...\n`)
 
   for (let i = 0; i < 3; i++) {
     // Approve properties...
@@ -46,14 +46,15 @@ async function main() {
     await transaction.wait()
   }
 
-  // Listing properties...
-  transaction = await escrow.connect(seller).list(1, buyer.address, tokens(20), tokens(10))
+  // Setting properties for Rent...
+  // ??? Why moving all 3 NFTs to Buyer address if not purchased yet
+  transaction = await escrow.connect(seller).setForRent(1, buyer.address, tokens(20), tokens(10))
   await transaction.wait()
 
-  transaction = await escrow.connect(seller).list(2, buyer.address, tokens(15), tokens(5))
+  transaction = await escrow.connect(seller).setForRent(2, buyer.address, tokens(15), tokens(5))
   await transaction.wait()
 
-  transaction = await escrow.connect(seller).list(3, buyer.address, tokens(10), tokens(5))
+  transaction = await escrow.connect(seller).setForRent(3, buyer.address, tokens(10), tokens(5))
   await transaction.wait()
 }
 

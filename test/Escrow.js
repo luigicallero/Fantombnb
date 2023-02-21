@@ -6,34 +6,34 @@ const tokens = (n) => {
 }
 
 describe('Escrow', () => {
-    let buyer, seller
+    let renter, houseOwner
     let fantombnb, escrow
 
     beforeEach(async () => {
         // Setup accounts
-        [buyer, seller] = await ethers.getSigners()
+        [renter, houseOwner] = await ethers.getSigners()
 
         // Deploy Real Estate
         const FantomBNB = await ethers.getContractFactory('FantomBNB')
         fantombnb = await FantomBNB.deploy()
 
         // Mint 
-        let transaction = await fantombnb.connect(seller).mint("https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS")
+        let transaction = await fantombnb.connect(houseOwner).mint("https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS")
         await transaction.wait()
 
         // Deploy Escrow
         const Escrow = await ethers.getContractFactory('Escrow')
         escrow = await Escrow.deploy(
             fantombnb.address,
-            seller.address
+            houseOwner.address
         )
 
         // Approve Property
-        transaction = await fantombnb.connect(seller).approve(escrow.address, 1)
+        transaction = await fantombnb.connect(houseOwner).approve(escrow.address, 1)
         await transaction.wait()
 
-        // List Property
-        transaction = await escrow.connect(seller).list(1, buyer.address, tokens(10), tokens(5))
+        // Set for Rent Property
+        transaction = await escrow.connect(houseOwner).setForRent(1, renter.address, tokens(10), tokens(5))
         await transaction.wait()
     })
 
@@ -43,30 +43,30 @@ describe('Escrow', () => {
             expect(result).to.be.equal(fantombnb.address)
         })
 
-        it('Returns seller', async () => {
-            const result = await escrow.seller()
-            expect(result).to.be.equal(seller.address)
+        it('Returns houseOwner', async () => {
+            const result = await escrow.houseOwner()
+            expect(result).to.be.equal(houseOwner.address)
         })
     })
 
-    describe('Listing', () => {
-        it('Updates as listed', async () => {
-            const result = await escrow.isListed(1)
+    describe('Setting for Rent', () => {
+        it('Updates as for Rent', async () => {
+            const result = await escrow.isForRent(1)
             expect(result).to.be.equal(true)
         })
 
-        it('Returns buyer', async () => {
-            const result = await escrow.buyer(1)
-            expect(result).to.be.equal(buyer.address)
+        it('Returns renter', async () => {
+            const result = await escrow.renter(1)
+            expect(result).to.be.equal(renter.address)
         })
 
         it('Returns purchase price', async () => {
-            const result = await escrow.purchasePrice(1)
+            const result = await escrow.rentPrice(1)
             expect(result).to.be.equal(tokens(10))
         })
 
         it('Returns escrow amount', async () => {
-            const result = await escrow.escrowAmount(1)
+            const result = await escrow.rentDeposit(1)
             expect(result).to.be.equal(tokens(5)) // could be a percentage
         })
 
@@ -77,7 +77,7 @@ describe('Escrow', () => {
 
     describe('Deposits', () => {
         beforeEach(async () => {
-            const transaction = await escrow.connect(buyer).depositEarnest(1, { value: tokens(5) })
+            const transaction = await escrow.connect(renter).depositEarnest(1, { value: tokens(5) })
             await transaction.wait()
         })
 
@@ -89,38 +89,38 @@ describe('Escrow', () => {
 
     describe('Approval', () => {
         beforeEach(async () => {
-            let transaction = await escrow.connect(buyer).approveSale(1)
+            let transaction = await escrow.connect(renter).approveSale(1)
             await transaction.wait()
 
-            transaction = await escrow.connect(seller).approveSale(1)
+            transaction = await escrow.connect(houseOwner).approveSale(1)
             await transaction.wait()
         })
 
         it('Updates approval status', async () => {
-            expect(await escrow.approval(1, buyer.address)).to.be.equal(true)
-            expect(await escrow.approval(1, seller.address)).to.be.equal(true)
+            expect(await escrow.approval(1, renter.address)).to.be.equal(true)
+            expect(await escrow.approval(1, houseOwner.address)).to.be.equal(true)
         })
     })
 
     describe('Sale', () => {
         beforeEach(async () => {
-            let transaction = await escrow.connect(buyer).depositEarnest(1, { value: tokens(5) })
+            let transaction = await escrow.connect(renter).depositEarnest(1, { value: tokens(5) })
             await transaction.wait()
 
-            transaction = await escrow.connect(buyer).approveSale(1)
+            transaction = await escrow.connect(renter).approveSale(1)
             await transaction.wait()
 
-            transaction = await escrow.connect(seller).approveSale(1)
+            transaction = await escrow.connect(houseOwner).approveSale(1)
             await transaction.wait()
 
-            await buyer.sendTransaction({ to: escrow.address, value: tokens(5) })
+            await renter.sendTransaction({ to: escrow.address, value: tokens(5) })
 
-            transaction = await escrow.connect(seller).finalizeSale(1)
+            transaction = await escrow.connect(houseOwner).finalizeSale(1)
             await transaction.wait()
         })
 
         it('Updates ownership', async () => {
-            expect(await fantombnb.ownerOf(1)).to.be.equal(buyer.address)
+            expect(await fantombnb.ownerOf(1)).to.be.equal(renter.address)
         })
 
         it('Updates balance', async () => {
