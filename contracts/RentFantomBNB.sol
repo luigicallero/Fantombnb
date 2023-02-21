@@ -7,56 +7,52 @@ interface IERC721 {
         address _to,
         uint256 _id
     ) external;
+    
+    function ownerOf(uint256 tokenId) external view returns (address owner);
 }
 
-contract Escrow {
+contract RentFantomBNB {
     address public nftAddress;
-    address payable public houseOwner;
+    address payable public contractOwner;
 
-    modifier onlyRenter(uint256 _nftID) {
-        require(msg.sender == renter[_nftID], "Only renter can call this method");
-        _;
-    }
-
-    modifier onlyHouseOwner() {
-        require(msg.sender == houseOwner, "Only houseOwner can call this method");
+    modifier onlyHouseOwner(uint256 _nftID) {
+        require(msg.sender == IERC721(nftAddress).ownerOf(_nftID), "Only houseOwner can call this method");
         _;
     }
 
 // ??? Could be replaced with Struct
     mapping(uint256 => bool) public isForRent;
     mapping(uint256 => uint256) public rentPrice;
-    mapping(uint256 => uint256) public depositPrice;
+    mapping(uint256 => uint256) public rentDepositPrice;
     mapping(uint256 => address) public renter;
-    mapping(uint256 => address) public houseOwnership;
+    //mapping(uint256 => address) public houseOwner; // replaced by ownerOf
     mapping(uint256 => mapping(address => bool)) public approval;
 
     constructor(
         address _nftAddress,
-        address payable _houseOwner
+        address payable _contractOwner
     ) {
         nftAddress = _nftAddress;
-        houseOwner = _houseOwner;
+        contractOwner = _contractOwner;
     }
 
     function setForRent(
         uint256 _nftID,
-        address _houseOwner,
         uint256 _rentPrice,
-        uint256 _depositPrice
-    ) public payable onlyHouseOwner {
+        uint256 _rentDepositPrice
+    ) public payable onlyHouseOwner(_nftID) {
         // Transfer NFT from houseOwner to this contract
         IERC721(nftAddress).transferFrom(msg.sender, address(this), _nftID);
 
         isForRent[_nftID] = true;
         rentPrice[_nftID] = _rentPrice;
-        depositPrice[_nftID] = _depositPrice;
-        houseOwnership[_nftID] = _houseOwner;
+        rentDepositPrice[_nftID] = _rentDepositPrice;
+        renter[_nftID] = address(this); // Initially the renter is set to Rent Contract address
     }
 
     // Put Under Contract (only renter - payable escrow)
-    function depositEarnest(uint256 _nftID) public payable onlyRenter(_nftID) {
-        require(msg.value >= depositPrice[_nftID]);
+    function sendRentDeposit(uint256 _nftID) public payable {
+        require(msg.value >= rentDepositPrice[_nftID]);
     }
 
     // Update Inspection Status (only inspector)
@@ -78,32 +74,32 @@ contract Escrow {
     // -> Require funds to be correct amount
     // -> Transfer NFT to renter
     // -> Transfer Funds to houseOwner
-    function finalizeSale(uint256 _nftID) public {
-//        require(inspectionPassed[_nftID]);
-        require(approval[_nftID][renter[_nftID]]);
-        require(approval[_nftID][houseOwner]);
-        //require(approval[_nftID][lender]);
-        require(address(this).balance >= rentPrice[_nftID]);
+//     function finalizeSale(uint256 _nftID) public {
+// //        require(inspectionPassed[_nftID]);
+//         require(approval[_nftID][renter[_nftID]]);
+//         require(approval[_nftID][houseOwner]);
+//         //require(approval[_nftID][lender]);
+//         require(address(this).balance >= rentPrice[_nftID]);
 
-        isForRent[_nftID] = false;
+//         isForRent[_nftID] = false;
 
-        (bool success, ) = payable(houseOwner).call{value: address(this).balance}(
-            ""
-        );
-        require(success);
+//         (bool success, ) = payable(houseOwner).call{value: address(this).balance}(
+//             ""
+//         );
+//         require(success);
 
-        IERC721(nftAddress).transferFrom(address(this), renter[_nftID], _nftID);
-    }
+//         IERC721(nftAddress).transferFrom(address(this), renter[_nftID], _nftID);
+//     }
 
     // Cancel Sale (handle earnest deposit)
     // -> if approval status is not approved, then refund, otherwise send to houseOwner
-    function cancelSale(uint256 _nftID) public {
-        if (approval[_nftID][houseOwner] == false) {
-            payable(renter[_nftID]).transfer(address(this).balance);
-        } else {
-            payable(houseOwner).transfer(address(this).balance);
-        }
-    }
+    // function cancelSale(uint256 _nftID) public {
+    //     if (approval[_nftID][houseOwner] == false) {
+    //         payable(renter[_nftID]).transfer(address(this).balance);
+    //     } else {
+    //         payable(houseOwner).transfer(address(this).balance);
+    //     }
+    // }
 
     receive() external payable {}
 
