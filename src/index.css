@@ -98,11 +98,14 @@ nav {
 
 /* ------------------------------------------------------ */
 /* -- HEADER -- */
-
-header {
-  background-image: url("./assets/houses.png");
+#container{
+  background-image: url("./assets/home-bg.jpg");
   background-position: center;
-  background-size: cover;
+  background-size: cover;  
+  height: 80vh;
+}
+header {
+  
   min-height: 40vh;
 
   position: relative;
@@ -149,6 +152,7 @@ header {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  color: whitesmoke;
 }
 
 .cards__section h3 {
@@ -160,6 +164,7 @@ header {
   gap: 10px;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
   margin-top: 20px;
+
 }
 
 .card {
