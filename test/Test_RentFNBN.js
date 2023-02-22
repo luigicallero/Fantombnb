@@ -10,8 +10,8 @@ describe('Rent of the House', () => {
     let fantombnb, rentfbnb
 
     beforeEach(async () => {
-        // Setup accounts (account0, account1, account2)
-        [contractCreator, houseOwner, renter ] = await ethers.getSigners()
+        // Setup accounts (account0 this one is used by default for contract deployment, account1, account2)
+        [contractCreator, houseOwner, renter, anotherAccount ] = await ethers.getSigners()
 
         // Deploy Real Estate
         const FantomBNB = await ethers.getContractFactory('FantomBNB')
@@ -54,10 +54,10 @@ describe('Rent of the House', () => {
             expect(result).to.be.equal(true)
         })
 
-        it('Initially the Renter is the Rent Contract)', async () => {
-            const result = await rentfbnb.renter(1)
-            expect(result).to.be.equal(rentfbnb.address)
-        })
+        // it('Initially the Renter is the Rent Contract)', async () => {
+        //     const result = await rentfbnb.renter(1)
+        //     expect(result).to.be.equal(rentfbnb.address)
+        // })
 
         it('Returns purchase price', async () => {
             const result = await rentfbnb.rentPrice(1)
@@ -74,56 +74,57 @@ describe('Rent of the House', () => {
         })
     })
 
-    describe('Deposits', () => {
+    describe('Rent Deposit', () => {
         beforeEach(async () => {
             const transaction = await rentfbnb.connect(renter).sendRentDeposit(1, { value: tokens(5) })
             await transaction.wait()
         })
 
-        it('Updates contract balance', async () => {
+        it('Shows contract balance equals 5ETH', async () => {
             const result = await rentfbnb.getBalance()
             expect(result).to.be.equal(tokens(5))
+        })
+
+        it('House is no longer set for Rent', async () => {
+            const result = await rentfbnb.isForRent(1)
+            expect(result).to.be.equal(false)
+        })
+
+        it('Should not allow for others to rent it', async () => {
+            await expect(rentfbnb.connect(anotherAccount).sendRentDeposit(1, { value: tokens(5) })).to.be.reverted;
         })
     })
 
     describe('Approval', () => {
         beforeEach(async () => {
-            let transaction = await rentfbnb.connect(renter).approveSale(1)
-            await transaction.wait()
-
-            transaction = await rentfbnb.connect(houseOwner).approveSale(1)
+            transaction = await rentfbnb.connect(houseOwner).approveRent(1)
             await transaction.wait()
         })
 
-        it('Updates approval status', async () => {
-            expect(await rentfbnb.approval(1, renter.address)).to.be.equal(true)
+        it('Shows House Owner approved the renter', async () => {
             expect(await rentfbnb.approval(1, houseOwner.address)).to.be.equal(true)
         })
     })
 
-    describe('Sale', () => {
+    describe('Rent', () => {
         beforeEach(async () => {
             let transaction = await rentfbnb.connect(renter).sendRentDeposit(1, { value: tokens(5) })
             await transaction.wait()
 
-            transaction = await rentfbnb.connect(renter).approveSale(1)
-            await transaction.wait()
-
-            transaction = await rentfbnb.connect(houseOwner).approveSale(1)
+            transaction = await rentfbnb.connect(houseOwner).approveRent(1)
             await transaction.wait()
 
             await renter.sendTransaction({ to: rentfbnb.address, value: tokens(5) })
 
-            transaction = await rentfbnb.connect(houseOwner).finalizeSale(1)
+            transaction = await rentfbnb.connect(houseOwner).finalizeRent(1)
             await transaction.wait()
         })
-// We need to update here, we are not sending NFT to renter, but pausing the NFT
-//  and declaring it for Rent fo a rent for x period of timerent time only
-        it('Updates ownership', async () => {
-            expect(await fantombnb.ownerOf(1)).to.be.equal(renter.address)
+
+        it('Shows Renter has rented the FantomBNB NFT', async () => {
+            expect(await rentfbnb.connect(houseOwner).renter(1)).to.be.equal(renter.address)
         })
 
-        it('Updates balance', async () => {
+        it('Shows contract balance equals 0', async () => {
             expect(await rentfbnb.getBalance()).to.be.equal(0)
         })
     })
