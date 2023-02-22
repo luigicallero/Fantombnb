@@ -62,7 +62,7 @@ function App() {
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
-      <br></br>
+      
       <div id="container">
         <Search />
 
