@@ -81,15 +81,16 @@ contract RentFantomBNB {
         renter[_nftID] = potentialRenter[_nftID];
     }
 
-    // Cancel Sale (handle earnest deposit)
+    // Cancel Rent (handle earnest deposit)
     // -> if approval status is not approved, then refund, otherwise send to houseOwner
-    // function cancelSale(uint256 _nftID) public {
-    //     if (approval[_nftID][houseOwner] == false) {
-    //         payable(renter[_nftID]).transfer(address(this).balance);
-    //     } else {
-    //         payable(houseOwner).transfer(address(this).balance);
-    //     }
-    // }
+    function cancelRent(uint256 _nftID) public onlyHouseOwner(_nftID){
+        // if (approval[_nftID][msg.sender] == false) {
+            payable(renter[_nftID]).transfer(address(this).balance); // only _nftID balance
+            potentialRenter[_nftID] = 0x0000000000000000000000000000000000000000; // resetting potential renter
+        // } else {
+        //     payable(houseOwner[_nftID]).transfer(address(this).balance); // only _nftID balance
+        // }
+    }
 
     receive() external payable {}
 

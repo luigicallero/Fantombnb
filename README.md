@@ -138,5 +138,5 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 * Esteban: Dapp Wiki Web: Dapp link and Repo Link, Functionality Diagram
 * Esteban: Dapp Wiki Web: use this as sample: https://sunflower-land.com/?utm_source=DappRadar&utm_medium=deeplink&utm_campaign=visit-website
 * Luis: Balance per nftID to be sent to houseOnwer (not all contract balance)
-* Luis: Cancel Rent operation
+* Luis: Generate metadata for our NFTs (remove the ones from DappUniversity tutorial)
 * Luis: Investigate this repo:https://github.com/kaymen99/DecentralAirbnb

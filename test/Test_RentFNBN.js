@@ -71,6 +71,8 @@ describe('Rent of the House', () => {
 
         it('Updates ownership', async () => {
             expect(await fantombnb.ownerOf(1)).to.be.equal(rentfbnb.address)
+            const check = await rentfbnb.potentialRenter(1)
+            console.log(check)
         })
     })
 
@@ -122,6 +124,24 @@ describe('Rent of the House', () => {
 
         it('Shows Renter has rented the FantomBNB NFT', async () => {
             expect(await rentfbnb.connect(houseOwner).renter(1)).to.be.equal(renter.address)
+        })
+
+        it('Shows contract balance equals 0', async () => {
+            expect(await rentfbnb.getBalance()).to.be.equal(0)
+        })
+    })
+
+    describe('Cancel Rent', () => {
+        beforeEach(async () => {
+            let transaction = await rentfbnb.connect(renter).sendRentDeposit(1, { value: tokens(5) })
+            await transaction.wait()
+
+            transaction = await rentfbnb.connect(houseOwner).cancelRent(1)
+            await transaction.wait()
+        })
+
+        it('Shows Potential Renter is 0x0', async () => {
+            expect(await rentfbnb.connect(houseOwner).potentialRenter(1)).to.be.equal('0x0000000000000000000000000000000000000000')
         })
 
         it('Shows contract balance equals 0', async () => {
