@@ -58,7 +58,7 @@ function App() {
     setHome(home)
     toggle ? setToggle(false) : setToggle(true);
   }
-
+  
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
@@ -96,7 +96,7 @@ function App() {
       {toggle && (
         <Home home={home} provider={provider} account={account} escrow={escrow} togglePop={togglePop} />
       )}
-
+      
     </div>
   );
 }
