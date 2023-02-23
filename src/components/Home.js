@@ -152,7 +152,7 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
                                 </button>
                             ) : (
                                 <button className='home__buy' onClick={buyHandler} disabled={hasBought}>
-                                    Buy
+                                    Rent
                                 </button>
                             )}
 
