@@ -33,57 +33,46 @@ describe('Rent of the House', () => {
         await transaction.wait()
 
         // Set for Rent Property
-        transaction = await rentfbnb.connect(houseOwner).setForRent(1, tokens(10), tokens(5))
+        transaction = await rentfbnb.connect(houseOwner).setForRent(1, tokens(5), tokens(10))
         await transaction.wait()
     })
 
-    describe('Deployment', () => {
+    describe('Set for Rent', () => {
         it('Returns NFT address', async () => {
             const result = await rentfbnb.nftAddress()
             expect(result).to.be.equal(fantombnb.address)
         })
+
         it('Returns houseOwner (currently the Rent Contract)', async () => {
             const result = await fantombnb.ownerOf(1)
             expect(result).to.be.equal(rentfbnb.address)
         })
-    })
 
-    describe('Setting for Rent', () => {
         it('House set for Rent', async () => {
             const result = await rentfbnb.isForRent(1)
             expect(result).to.be.equal(true)
         })
 
-        // it('Initially the Renter is the Rent Contract)', async () => {
-        //     const result = await rentfbnb.renter(1)
-        //     expect(result).to.be.equal(rentfbnb.address)
-        // })
+        it('Returns rent deposit amount', async () => {
+            const result = await rentfbnb.rentDepositPrice(1)
+            expect(result).to.be.equal(tokens(5))
+        })
 
-        it('Returns purchase price', async () => {
+        it('Returns rent price', async () => {
             const result = await rentfbnb.rentPrice(1)
             expect(result).to.be.equal(tokens(10))
         })
 
-        it('Returns rent deposit amount', async () => {
-            const result = await rentfbnb.rentDepositPrice(1)
-            expect(result).to.be.equal(tokens(5)) // could be a percentage or 1 rent month
-        })
-
-        it('Updates ownership', async () => {
-            expect(await fantombnb.ownerOf(1)).to.be.equal(rentfbnb.address)
-            const check = await rentfbnb.potentialRenter(1)
-            console.log(check)
-        })
     })
 
-    describe('Rent Deposit', () => {
+    describe('Potential renter sends rent deposit', () => {
         beforeEach(async () => {
             const transaction = await rentfbnb.connect(renter).sendRentDeposit(1, { value: tokens(5) })
             await transaction.wait()
         })
 
-        it('Shows contract balance equals 5ETH', async () => {
-            const result = await rentfbnb.getBalance()
+        it('Shows balance for potential renter for this nft equals 5ETH', async () => {
+            const result = await rentfbnb.getNFTBalance(1)
             expect(result).to.be.equal(tokens(5))
         })
 
@@ -108,30 +97,50 @@ describe('Rent of the House', () => {
         })
     })
 
-    describe('Rent', () => {
+    describe('Potential renter sends rent price', () => {
         beforeEach(async () => {
             let transaction = await rentfbnb.connect(renter).sendRentDeposit(1, { value: tokens(5) })
             await transaction.wait()
 
-            transaction = await rentfbnb.connect(houseOwner).approveRent(1)
+            transaction = await rentfbnb.connect(renter).sendRentPrice(1, { value: tokens(10) })
+            await transaction.wait()
+        })
+
+        it('Shows balance for potential renter for this nft equals 15ETH', async () => {
+            const result = await rentfbnb.getNFTBalance(1)
+            expect(result).to.be.equal(tokens(15))
+        })
+
+        it('Only potential renter for this nft can send the rent price', async () => {
+            await expect(rentfbnb.connect(anotherAccount).sendRentPrice(1, { value: tokens(10) })).to.be.reverted;
+        })
+    })
+
+    describe('Rent is finilized by House Owner', () => {
+        beforeEach(async () => {
+            let transaction = await rentfbnb.connect(renter).sendRentDeposit(1, { value: tokens(5) })  // sending deposit
             await transaction.wait()
 
-            await renter.sendTransaction({ to: rentfbnb.address, value: tokens(5) })
+            transaction = await rentfbnb.connect(houseOwner).approveRent(1) // approval by house owner
+            await transaction.wait()
 
-            transaction = await rentfbnb.connect(houseOwner).finalizeRent(1)
+            transaction = await rentfbnb.connect(renter).sendRentPrice(1, { value: tokens(10) })  // sending rent price
+            await transaction.wait()
+
+            transaction = await rentfbnb.connect(houseOwner).finalizeRent(1) // house owner to finalize transaction
             await transaction.wait()
         })
 
         it('Shows Renter has rented the FantomBNB NFT', async () => {
-            expect(await rentfbnb.connect(houseOwner).renter(1)).to.be.equal(renter.address)
+            expect(await rentfbnb.renter(1)).to.be.equal(renter.address)
         })
 
-        it('Shows contract balance equals 0', async () => {
-            expect(await rentfbnb.getBalance()).to.be.equal(0)
+        it('Shows balance for potential renter for this nft equals 0ETH', async () => {
+            expect(await rentfbnb.getNFTBalance(1)).to.be.equal(0)
         })
     })
 
-    describe('Cancel Rent', () => {
+    describe('Cancel Rent after Deposit', () => {
         beforeEach(async () => {
             let transaction = await rentfbnb.connect(renter).sendRentDeposit(1, { value: tokens(5) })
             await transaction.wait()
