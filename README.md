@@ -133,13 +133,15 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 
 
 ## To Dos:
-* Juan: Frontend to be alike Airbnb frontend-In progress
+* Juan: About to open a new tab, delete Sell button
+* Juan: Frontend to be alike Airbnb frontend - Completed?
+* Juan: Search filter to work with NFT
+* Esteban: Generate metadata for our NFTs (remove the ones from DappUniversity tutorial)
 * Esteban: Dapp Wiki Web update: English, remove resources and add 30secs speach
 * Esteban: Dapp Wiki Web: Dapp link and Repo Link, Functionality Diagram
 * Esteban: Dapp Wiki Web: use this as sample: https://sunflower-land.com/?utm_source=DappRadar&utm_medium=deeplink&utm_campaign=visit-website
-* Luis: Balance per nftID to be sent to houseOnwer (not all contract balance)
-* Luis: Generate metadata for our NFTs (remove the ones from DappUniversity tutorial)
 * Luis: replace all mappings with a struct
 * Luis: This contract could mint new NFTs
-* Luis: Missing events
+* Luis: Missing events (logged in blockchain?)
 * Luis: Investigate this repo:https://github.com/kaymen99/DecentralAirbnb
+* Luis: Update House price (deposit and price)

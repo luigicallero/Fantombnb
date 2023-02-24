@@ -12,7 +12,7 @@ const tokens = (n) => {
 
 async function main() {
   // Setup accounts
-  const [buyer, seller, inspector, lender] = await ethers.getSigners()
+  const [contractCreator, houseOwner, buyer] = await ethers.getSigners()
 
   // Deploy FantomBNB
   const FantomBNB = await ethers.getContractFactory('FantomBNB')
@@ -23,38 +23,35 @@ async function main() {
   console.log(`Minting 3 properties...\n`)
 
   for (let i = 0; i < 3; i++) {
-    const transaction = await fantombnb.connect(seller).mint(`https://ipfs.io/ipfs/QmQVcpsjrA6cr1iJjZAodYwmPekYgbnXGo4DFubJiLc2EB/${i + 1}.json`)
+    const transaction = await fantombnb.connect(houseOwner).mint(`https://ipfs.io/ipfs/QmQVcpsjrA6cr1iJjZAodYwmPekYgbnXGo4DFubJiLc2EB/${i + 1}.json`)
     await transaction.wait()
   }
 
-  // Deploy Escrow
-  const Escrow = await ethers.getContractFactory('Escrow')
-  const escrow = await Escrow.deploy(
+  // Deploy Rent Contract
+  const RentFantomBNB = await ethers.getContractFactory('RentFantomBNB')
+  const rentfantombnb = await RentFantomBNB.deploy(
     fantombnb.address,
-    seller.address,
-    inspector.address,
-    lender.address
+    contractCreator.address,
   )
-  await escrow.deployed()
+  await rentfantombnb.deployed()
 
-  console.log(`Deployed Escrow Contract at: ${escrow.address}`)
+  console.log(`Deployed Rent Contract at: ${rentfantombnb.address}`)
   console.log(`Setting for Rent 3 properties...\n`)
 
   for (let i = 0; i < 3; i++) {
     // Approve properties...
-    let transaction = await fantombnb.connect(seller).approve(escrow.address, i + 1)
+    let transaction = await fantombnb.connect(houseOwner).approve(rentfantombnb.address, i + 1)
     await transaction.wait()
   }
 
   // Setting properties for Rent...
-  // ??? Why moving all 3 NFTs to Buyer address if not purchased yet
-  transaction = await escrow.connect(seller).setForRent(1, buyer.address, tokens(20), tokens(10))
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(1, tokens(20), tokens(10))
   await transaction.wait()
 
-  transaction = await escrow.connect(seller).setForRent(2, buyer.address, tokens(15), tokens(5))
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(2, tokens(15), tokens(5))
   await transaction.wait()
 
-  transaction = await escrow.connect(seller).setForRent(3, buyer.address, tokens(10), tokens(5))
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(3, tokens(10), tokens(5))
   await transaction.wait()
 }
 
