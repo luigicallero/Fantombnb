@@ -130,16 +130,16 @@ https://fakerjs.dev/api/address.html#city
 * Dapp University Real State with NFTs: 
 https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 * Bumpkins Contract (role based, royalty, etc): https://polygonscan.com/token/0x624e4fa6980afcf8ea27bfe08e2fb5979b64df1c?a=28682#code#L189
+* Wiki Documentation used as sample: https://sunflower-land.com/?utm_source=DappRadar&utm_medium=deeplink&utm_campaign=visit-website
 
 
 ## To Dos:
 * Juan: Search filter to work with NFT
-* Esteban: Generate metadata for our NFTs (remove the ones from DappUniversity tutorial)
-* Esteban: Dapp Wiki Web update: English, remove resources and add 30secs speach
-* Esteban: Dapp Wiki Web: Dapp link and Repo Link, Functionality Diagram
-* Esteban: Dapp Wiki Web: use this as sample: https://sunflower-land.com/?utm_source=DappRadar&utm_medium=deeplink&utm_campaign=visit-website
+* Esteban: Generate metadata for our NFTs (remove purchase price, we will manage this from rent contract)
+* Esteban: Dapp Wiki Web: Dapp link (when hosted in server) and Github Repo Link
+* Luis: Message: "connect your metamask to fantom blockchain to display properties information"
 * Luis: replace all mappings with a struct
 * Luis: This contract could mint new NFTs
 * Luis: Missing events (logged in blockchain?)
 * Luis: Investigate this repo:https://github.com/kaymen99/DecentralAirbnb
-* Luis: Update House price (deposit and price)
+* Luis: function to Update House price (deposit and price)

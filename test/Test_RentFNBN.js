@@ -18,7 +18,7 @@ describe('Rent of the House', () => {
         fantombnb = await FantomBNB.deploy()
 
         // Mint 
-        let transaction = await fantombnb.connect(houseOwner).mint("https://ipfs.io/ipfs/QmTudSYeM7mz3PkYEWXWqPjomRPHogcMFSq7XAvsvsgAPS")
+        let transaction = await fantombnb.connect(houseOwner).mint("https://ipfs.io/ipfs/Qmavch7r7azHdo6WtZETqNdR71HbRBWXpSv6k93udsG7kY")
         await transaction.wait()
 
         // Deploy Rent Fantombnb

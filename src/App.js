@@ -8,14 +8,14 @@ import Home from './components/Home';
 
 // ABIs
 import FantomBNB from './abis/FantomBNB.json'
-import Escrow from './abis/Escrow.json'
+import RentFantomBNB from './abis/RentFantomBNB.json'
 
 // Config
 import config from './config.json';
 
 function App() {
   const [provider, setProvider] = useState(null)
-  const [escrow, setEscrow] = useState(null)
+  const [rentfantombnb, setRentContract] = useState(null)
 
   const [account, setAccount] = useState(null)
 
@@ -27,12 +27,12 @@ function App() {
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     setProvider(provider)
     const network = await provider.getNetwork()
-    const fantomBNB = new ethers.Contract(config[network.chainId].fantomBNB.address, FantomBNB, provider)
-    const totalSupply = await fantomBNB.totalSupply()
+    const fantombnb = new ethers.Contract(config[network.chainId].fantombnb.address, FantomBNB, provider)
+    const totalSupply = await fantombnb.totalSupply()
     const homes = []
 
     for (var i = 1; i <= totalSupply; i++) {
-      const uri = await fantomBNB.tokenURI(i)
+      const uri = await fantombnb.tokenURI(i)
       const response = await fetch(uri)
       const metadata = await response.json()
       homes.push(metadata)
@@ -40,8 +40,8 @@ function App() {
 
     setHomes(homes)
 
-    const escrow = new ethers.Contract(config[network.chainId].escrow.address, Escrow, provider)
-    setEscrow(escrow)
+    const rentfantombnb = new ethers.Contract(config[network.chainId].rentfantombnb.address, RentFantomBNB, provider)
+    setRentContract(rentfantombnb)
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -94,7 +94,7 @@ function App() {
       </div>
 
       {toggle && (
-        <Home home={home} provider={provider} account={account} escrow={escrow} togglePop={togglePop} />
+        <Home home={home} provider={provider} account={account} rentfantombnb={rentfantombnb} togglePop={togglePop} />
       )}
       
     </div>

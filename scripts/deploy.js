@@ -20,10 +20,10 @@ async function main() {
   await fantombnb.deployed()
 
   console.log(`Deployed FantomBNB Contract at: ${fantombnb.address}`)
-  console.log(`Minting 3 properties...\n`)
+  console.log(`Minting 6 properties...\n`)
 
-  for (let i = 0; i < 3; i++) {
-    const transaction = await fantombnb.connect(houseOwner).mint(`https://ipfs.io/ipfs/QmQVcpsjrA6cr1iJjZAodYwmPekYgbnXGo4DFubJiLc2EB/${i + 1}.json`)
+  for (let i = 0; i < 6; i++) {
+    const transaction = await fantombnb.connect(houseOwner).mint(`https://ipfs.io/ipfs/Qmavch7r7azHdo6WtZETqNdR71HbRBWXpSv6k93udsG7kY/${i + 1}.json`)
     await transaction.wait()
   }
 
@@ -36,9 +36,9 @@ async function main() {
   await rentfantombnb.deployed()
 
   console.log(`Deployed Rent Contract at: ${rentfantombnb.address}`)
-  console.log(`Setting for Rent 3 properties...\n`)
+  console.log(`Setting for Rent 6 properties...\n`)
 
-  for (let i = 0; i < 3; i++) {
+  for (let i = 0; i < 6; i++) {
     // Approve properties...
     let transaction = await fantombnb.connect(houseOwner).approve(rentfantombnb.address, i + 1)
     await transaction.wait()
@@ -52,6 +52,15 @@ async function main() {
   await transaction.wait()
 
   transaction = await rentfantombnb.connect(houseOwner).setForRent(3, tokens(10), tokens(5))
+  await transaction.wait()
+
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(4, tokens(6), tokens(12))
+  await transaction.wait()
+
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(5, tokens(30), tokens(50))
+  await transaction.wait()
+
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(6, tokens(3), tokens(8))
   await transaction.wait()
 }
 
