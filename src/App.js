@@ -35,6 +35,7 @@ function App() {
       const uri = await fantombnb.tokenURI(i)
       const response = await fetch(uri)
       const metadata = await response.json()
+      console.log(metadata)
       homes.push(metadata)
     }
 
@@ -73,13 +74,9 @@ function App() {
       
       <div id="container">
         <Search />
-
         <div className='cards__section'>
-
           <h3>Homes For You</h3>
-
           <hr />
-
           <div className='cards'>
             {homes.map((home, index) => (
               <div className='card' key={index} onClick={() => togglePop(home)}>
