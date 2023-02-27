@@ -42,6 +42,14 @@ function App() {
 
     const rentfantombnb = new ethers.Contract(config[network.chainId].rentfantombnb.address, RentFantomBNB, provider)
     setRentContract(rentfantombnb)
+    
+    // Captured Home prices from Rent Contract
+    const homePrices = []
+    for (var i = 1; i <= totalSupply; i++) {
+      const rentPrice = await rentfantombnb.rentPrice(i)
+      homePrices.push(rentPrice.toString())
+      console.log(ethers.utils.formatEther(rentPrice.toString()))  // <<<< Juan
+    }
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -79,11 +87,11 @@ function App() {
                   <img src={home.image} alt="Home" />
                 </div>
                 <div className='card__info'>
-                  <h4>{home.attributes[0].value} ETH</h4>
+                  <h4>{home.attributes[4].value} ETH</h4>
                   <p>
-                    <strong>{home.attributes[2].value}</strong> bds |
-                    <strong>{home.attributes[3].value}</strong> ba |
-                    <strong>{home.attributes[4].value}</strong> sqft
+                    <strong>{home.attributes[1].value}</strong> bds |
+                    <strong>{home.attributes[2].value}</strong> ba |
+                    <strong>{home.attributes[3].value}</strong> sqft
                   </p>
                   <p>{home.address}</p>
                 </div>
