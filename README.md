@@ -134,12 +134,15 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 
 
 ## To Dos:
+* Juan: Update code with public google API
 * Juan: Update Houses with correct prices from Rent Contract
 * Juan: Search filter to work with NFT
-* Esteban: Generate metadata for our NFTs (remove purchase price, we will manage this from rent contract)
 * Esteban: Dapp Wiki Web: Dapp link (when hosted in server) and Github Repo Link
+* Luis: host all code in velvet
 * Luis: Message: "connect your metamask to fantom blockchain to display properties information"
 * Luis: replace all mappings with a struct
+
+### Future:
 * Luis: This contract could mint new NFTs
 * Luis: Missing events (logged in blockchain?)
 * Luis: Investigate this repo:https://github.com/kaymen99/DecentralAirbnb
