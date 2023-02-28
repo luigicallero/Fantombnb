@@ -35,7 +35,7 @@ function App() {
       const uri = await fantombnb.tokenURI(i)
       const response = await fetch(uri)
       const metadata = await response.json()
-      console.log(metadata)
+      //console.log(metadata)
       homes.push(metadata)
     }
 
@@ -47,12 +47,17 @@ function App() {
     // Captured Home prices from Rent Contract
     const homePrices = []
     let precio = []
-    for (var i = 1; i <= totalSupply; i++) {
+    for (let i = 1; i <= totalSupply; i++) {
       const rentPrice = await rentfantombnb.rentPrice(i)
       homePrices.push(rentPrice.toString())
       precio.push(ethers.utils.formatEther(rentPrice.toString()))  // <<<< Juan
     }
-    console.log(precio)
+    for (let index = 0; index < homes.length; index++) {
+      homes[index].attributes[4].value = precio[index]
+      console.log(homes[index].attributes[4].value)
+      
+    }
+    console.log(homes[0].attributes[4].value)
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
