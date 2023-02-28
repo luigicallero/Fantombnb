@@ -46,11 +46,13 @@ function App() {
     
     // Captured Home prices from Rent Contract
     const homePrices = []
+    let precio = []
     for (var i = 1; i <= totalSupply; i++) {
       const rentPrice = await rentfantombnb.rentPrice(i)
       homePrices.push(rentPrice.toString())
-      console.log(ethers.utils.formatEther(rentPrice.toString()))  // <<<< Juan
+      precio.push(ethers.utils.formatEther(rentPrice.toString()))  // <<<< Juan
     }
+    console.log(precio)
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
