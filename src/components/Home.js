@@ -3,117 +3,70 @@ import { useEffect, useState } from 'react';
 
 import close from '../assets/close.svg';
 
-const Home = ({ home, provider, account, escrow, togglePop }) => {
-    const [hasBought, setHasBought] = useState(false)
-    const [hasLended, setHasLended] = useState(false)
-    const [hasInspected, setHasInspected] = useState(false)
-    const [hasSold, setHasSold] = useState(false)
+const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
+    const [hasDeposited, setHasDeposited] = useState(false)
+    const [hasRented, setHasRented] = useState(false)
+//    const [hasInspected, setHasInspected] = useState(false)
 
-    const [buyer, setBuyer] = useState(null)
-    const [lender, setLender] = useState(null)
-    const [inspector, setInspector] = useState(null)
-    const [seller, setSeller] = useState(null)
-
-    const [owner, setOwner] = useState(null)
+    const [potentialRenter, setPotentialRenter] = useState(null)
+    const [houseOwner, setHouseOwner] = useState(null)
 
     const fetchDetails = async () => {
-        // -- Buyer
+        // -- Potential Renter
 
-        const buyer = await escrow.buyer(home.id)
-        setBuyer(buyer)
+        const potentialRenter = await rentfantombnb.potentialRenter(home.id)
+        setPotentialRenter(potentialRenter)
+console.log(potentialRenter)
 
-        const hasBought = await escrow.approval(home.id, buyer)
-        setHasBought(hasBought)
+        const hasRented = await rentfantombnb.approval(home.id, potentialRenter)
+        setHasRented(hasRented)
+        // -- HouseOwner
+        
+        const houseOwner = await rentfantombnb.houseOwner(home.id)
+        setHouseOwner(houseOwner)
+console.log(houseOwner)
 
-        // -- Seller
-
-        const seller = await escrow.seller()
-        setSeller(seller)
-
-        const hasSold = await escrow.approval(home.id, seller)
-        setHasSold(hasSold)
-
-        // -- Lender
-
-        const lender = await escrow.lender()
-        setLender(lender)
-
-        const hasLended = await escrow.approval(home.id, lender)
-        setHasLended(hasLended)
-
-        // -- Inspector
-
-        const inspector = await escrow.inspector()
-        setInspector(inspector)
-
-        const hasInspected = await escrow.inspectionPassed(home.id)
-        setHasInspected(hasInspected)
     }
 
-    const fetchOwner = async () => {
-        if (await escrow.isListed(home.id)) return
+    // const fetchOwner = async () => {
+    //     if (await rentfantombnb.isListed(home.id)) return
 
-        const owner = await escrow.buyer(home.id)
-        setOwner(owner)
-    }
+    //     const owner = await rentfantombnb.houseOwner(home.id)
+    //     setOwner(owner)
+    // }
 
-    const buyHandler = async () => {
-        const escrowAmount = await escrow.escrowAmount(home.id)
+    const depositHandler = async () => {
+        const depositPrice = await rentfantombnb.depositPrice(home.id)
         const signer = await provider.getSigner()
 
         // Buyer deposit earnest
-        let transaction = await escrow.connect(signer).depositEarnest(home.id, { value: escrowAmount })
+        let transaction = await rentfantombnb.connect(signer).setDepositPrice(home.id, { value: depositPrice })
         await transaction.wait()
 
         // Buyer approves...
-        transaction = await escrow.connect(signer).approveSale(home.id)
+        transaction = await rentfantombnb.connect(signer).approveSale(home.id)
         await transaction.wait()
 
-        setHasBought(true)
+        setHasDeposited(true)
     }
 
-    const inspectHandler = async () => {
+    const rentHandler = async () => {
         const signer = await provider.getSigner()
 
-        // Inspector updates status
-        const transaction = await escrow.connect(signer).updateInspectionStatus(home.id, true)
+        // HouseOwner approves...
+        let transaction = await rentfantombnb.connect(signer).approveREnt(home.id)
         await transaction.wait()
 
-        setHasInspected(true)
-    }
-
-    const lendHandler = async () => {
-        const signer = await provider.getSigner()
-
-        // Lender approves...
-        const transaction = await escrow.connect(signer).approveSale(home.id)
+        // HouseOwner finalize...
+        transaction = await rentfantombnb.connect(signer).finalizeSale(home.id)
         await transaction.wait()
 
-        // Lender sends funds to contract...
-        const lendAmount = (await escrow.purchasePrice(home.id) - await escrow.escrowAmount(home.id))
-        await signer.sendTransaction({ to: escrow.address, value: lendAmount.toString(), gasLimit: 60000 })
-
-        setHasLended(true)
-    }
-
-    const sellHandler = async () => {
-        const signer = await provider.getSigner()
-
-        // Seller approves...
-        let transaction = await escrow.connect(signer).approveSale(home.id)
-        await transaction.wait()
-
-        // Seller finalize...
-        transaction = await escrow.connect(signer).finalizeSale(home.id)
-        await transaction.wait()
-
-        setHasSold(true)
+        setHasRented(true)
     }
 
     useEffect(() => {
         fetchDetails()
-        fetchOwner()
-    }, [hasSold])
+    }, [hasRented])
 
     return (
         <div className="home">
@@ -132,26 +85,22 @@ const Home = ({ home, provider, account, escrow, togglePop }) => {
 
                     <h2>{home.attributes[0].value} ETH</h2>
 
-                    {owner ? (
+                    {houseOwner ? (
                         <div className='home__owned'>
-                            Owned by {owner.slice(0, 6) + '...' + owner.slice(38, 42)}
+                            Owned by {houseOwner.slice(0, 6) + '...' + houseOwner.slice(38, 42)}
                         </div>
                     ) : (
                         <div>
-                            {(account === inspector) ? (
-                                <button className='home__buy' onClick={inspectHandler} disabled={hasInspected}>
-                                    Approve Inspection
+                            {(account === potentialRenter) ? (
+                                <button className='home__buy' onClick={depositHandler} disabled={hasDeposited}>
+                                    Pay Deposit
                                 </button>
-                            ) : (account === lender) ? (
-                                <button className='home__buy' onClick={lendHandler} disabled={hasLended}>
-                                    Approve & Lend
-                                </button>
-                            ) : (account === seller) ? (
-                                <button className='home__buy' onClick={sellHandler} disabled={hasSold}>
-                                    Approve & Sell
+                            ) : (account === houseOwner) ? (
+                                <button className='home__buy' onClick={rentHandler} disabled={hasRented}>
+                                    Approve & Rent
                                 </button>
                             ) : (
-                                <button className='home__buy' onClick={buyHandler} disabled={hasBought}>
+                                <button className='home__buy' onClick={rentHandler} disabled={hasRented}>
                                     Rent
                                 </button>
                             )}
