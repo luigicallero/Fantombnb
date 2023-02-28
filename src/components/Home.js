@@ -16,7 +16,7 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
 
         const potentialRenter = await rentfantombnb.potentialRenter(home.id)
         setPotentialRenter(potentialRenter)
-console.log(potentialRenter)
+//console.log(potentialRenter)
 
         const hasRented = await rentfantombnb.approval(home.id, potentialRenter)
         setHasRented(hasRented)
@@ -24,7 +24,7 @@ console.log(potentialRenter)
         
         const houseOwner = await rentfantombnb.houseOwner(home.id)
         setHouseOwner(houseOwner)
-console.log(houseOwner)
+//console.log(houseOwner)
 
     }
 

@@ -57,7 +57,7 @@ function App() {
       //console.log(homes[index].attributes[4].value)
       
     }
-    //console.log(homes[0].attributes[4].value)
+    console.log(precio)
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
