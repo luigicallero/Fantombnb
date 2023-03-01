@@ -35,29 +35,20 @@ function App() {
       const uri = await fantombnb.tokenURI(i)
       const response = await fetch(uri)
       const metadata = await response.json()
-      //console.log(metadata)
       homes.push(metadata)
     }
 
-    setHomes(homes)
-
+    // Captured Home prices from Rent Contract
     const rentfantombnb = new ethers.Contract(config[network.chainId].rentfantombnb.address, RentFantomBNB, provider)
     setRentContract(rentfantombnb)
     
-    // Captured Home prices from Rent Contract
-    const homePrices = []
-    let precio = []
-    for (let i = 1; i <= totalSupply; i++) {
-      const rentPrice = await rentfantombnb.rentPrice(i)
-      homePrices.push(rentPrice.toString())
-      precio.push(ethers.utils.formatEther(rentPrice.toString()))  // <<<< Juan
-    }
     for (let index = 0; index < homes.length; index++) {
-      homes[index].attributes[4].value = precio[index]
-      //console.log(homes[index].attributes[4].value)
-      
+      const rentPrice = await rentfantombnb.rentPrice(index + 1)
+      homes[index].price = ethers.utils.formatEther(rentPrice.toString())
     }
-    console.log(precio)
+    
+    setHomes(homes)
+    console.log(homes)
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -91,7 +82,7 @@ function App() {
                   <img src={home.image} alt="Home" />
                 </div>
                 <div className='card__info'>
-                  <h4>{home.attributes[4].value} ETH</h4>
+                  <h4>{home.price} ETH</h4>
                   <p>
                     <strong>{home.attributes[1].value}</strong> bds |
                     <strong>{home.attributes[2].value}</strong> ba |

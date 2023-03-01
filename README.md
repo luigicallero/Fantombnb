@@ -139,6 +139,8 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 * Juan: Search filter to work with NFT
 * Esteban: Dapp Wiki Web: Dapp link (when hosted in server) and Github Repo Link
 * Luis & Juan: Update the Home.js react component with correct information
+* Luis: "Provide links from https://ftmscan.com/ to your contracts".
+* Luis: "Contracts for the project must be deployed, verified, and publicly readable"
 * Luis: host all code in velvet
 * Luis: Message: "connect your metamask to fantom blockchain to display properties information"
 

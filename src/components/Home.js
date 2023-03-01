@@ -10,42 +10,44 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
 
     const [potentialRenter, setPotentialRenter] = useState(null)
     const [houseOwner, setHouseOwner] = useState(null)
+    const [rented, setRented] = useState(null)
 
     const fetchDetails = async () => {
-        // -- Potential Renter
 
+        // -- Potential Renter
         const potentialRenter = await rentfantombnb.potentialRenter(home.id)
         setPotentialRenter(potentialRenter)
-//console.log(potentialRenter)
+console.log("Potential Renter: ", potentialRenter)
+
+        // -- HouseOwner
+        const houseOwner = await rentfantombnb.houseOwner(home.id)
+        setHouseOwner(houseOwner)
+console.log("House Owner: ", houseOwner)
 
         const hasRented = await rentfantombnb.approval(home.id, potentialRenter)
         setHasRented(hasRented)
-        // -- HouseOwner
-        
-        const houseOwner = await rentfantombnb.houseOwner(home.id)
-        setHouseOwner(houseOwner)
-//console.log(houseOwner)
 
     }
 
-    // const fetchOwner = async () => {
-    //     if (await rentfantombnb.isListed(home.id)) return
+    const fetchRented = async () => {
+        if (await rentfantombnb.isForRent(home.id)) return
 
-    //     const owner = await rentfantombnb.houseOwner(home.id)
-    //     setOwner(owner)
-    // }
+        const rented = await rentfantombnb.potentialRenter(home.id)
+        setRented(rented)
+console.log("House rented by ",rented)
+    }
 
     const depositHandler = async () => {
         const depositPrice = await rentfantombnb.depositPrice(home.id)
         const signer = await provider.getSigner()
 
-        // Buyer deposit earnest
+        // Renter sends deposit price
         let transaction = await rentfantombnb.connect(signer).setDepositPrice(home.id, { value: depositPrice })
         await transaction.wait()
 
-        // Buyer approves...
-        transaction = await rentfantombnb.connect(signer).approveSale(home.id)
-        await transaction.wait()
+        // // Buyer approves...
+        // transaction = await rentfantombnb.connect(signer).approveRent(home.id)
+        // await transaction.wait()
 
         setHasDeposited(true)
     }
@@ -54,11 +56,11 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
         const signer = await provider.getSigner()
 
         // HouseOwner approves...
-        let transaction = await rentfantombnb.connect(signer).approveREnt(home.id)
+        let transaction = await rentfantombnb.connect(signer).approveRent(home.id)
         await transaction.wait()
 
         // HouseOwner finalize...
-        transaction = await rentfantombnb.connect(signer).finalizeSale(home.id)
+        transaction = await rentfantombnb.connect(signer).finalizeRent(home.id)
         await transaction.wait()
 
         setHasRented(true)
@@ -66,6 +68,7 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
 
     useEffect(() => {
         fetchDetails()
+        fetchRented()
     }, [hasRented])
 
     return (
@@ -77,15 +80,15 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
                 <div className="home__overview">
                     <h1>{home.name}</h1>
                     <p>
-                        <strong>{home.attributes[2].value}</strong> bds |
-                        <strong>{home.attributes[3].value}</strong> ba |
-                        <strong>{home.attributes[4].value}</strong> sqft
+                        <strong>{home.attributes[1].value}</strong> bds |
+                        <strong>{home.attributes[2].value}</strong> ba |
+                        <strong>{home.attributes[3].value}</strong> sqft
                     </p>
                     <p>{home.address}</p>
 
-                    <h2>{home.attributes[0].value} ETH</h2>
+                    <h2>{home.price} ETH</h2>
 
-                    {houseOwner ? (
+                    {rented ? (
                         <div className='home__owned'>
                             Owned by {houseOwner.slice(0, 6) + '...' + houseOwner.slice(38, 42)}
                         </div>
