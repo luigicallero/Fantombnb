@@ -1,6 +1,7 @@
 # Fantombnb
 Fantom blockchain version of the famous Airbnb application
 
+<img width="600" alt="Fantom Testnet in Metamask" src="images/FantomBNB_frontpage.jpeg">
 
 ## Setting Up on Hardhat
 ### 1. Clone/Download the Repository
@@ -72,11 +73,9 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 
 ## To Dos:
 * Juan: Search filter to work with NFT
-* Esteban: Dapp Wiki Web: Dapp link (when hosted in server) and Github Repo Link
+* Esteban: Dapp Wiki Web: Github Repo Link
 * Luis & Juan: Update the Home.js react component with correct information
-* Luis: "Provide links from https://ftmscan.com/ to your contracts".
 * Luis: "Contracts for the project must be deployed, verified, and publicly readable"
-* Luis: host all code in velvet
 * Luis: Message: "connect your metamask to fantom blockchain to display properties information"
 
 ### Future:
