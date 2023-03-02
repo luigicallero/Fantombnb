@@ -82,7 +82,7 @@ function App() {
                   <img src={home.image} alt="Home" />
                 </div>
                 <div className='card__info'>
-                  <h4>{home.price} ETH</h4>
+                  <h4>{home.price} FTM</h4>
                   <p>
                     <strong>{home.attributes[1].value}</strong> bds |
                     <strong>{home.attributes[2].value}</strong> ba |

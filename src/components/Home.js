@@ -86,7 +86,7 @@ console.log("House rented by ",rented)
                     </p>
                     <p>{home.address}</p>
 
-                    <h2>{home.price} ETH</h2>
+                    <h2>{home.price} FTM</h2>
 
                     {rented ? (
                         <div className='home__owned'>
@@ -100,7 +100,7 @@ console.log("House rented by ",rented)
                                 </button>
                             ) : (account === houseOwner) ? (
                                 <button className='home__buy' onClick={rentHandler} disabled={hasRented}>
-                                    Approve & Rent
+                                    Approve Renter
                                 </button>
                             ) : (
                                 <button className='home__buy' onClick={rentHandler} disabled={hasRented}>

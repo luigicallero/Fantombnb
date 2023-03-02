@@ -73,13 +73,15 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 
 ## To Dos:
 * Juan: Search filter to work with NFT
-* Esteban: Dapp Wiki Web: Github Repo Link
+* Juan: default picture in card when json/image is not loading from IPFS
 * Luis & Juan: Update the Home.js react component with correct information
 * Luis: "Contracts for the project must be deployed, verified, and publicly readable"
 * Luis: Message: "connect your metamask to fantom blockchain to display properties information"
 
 ### Future:
+* Luis: check with chatgpt the contracts
 * Luis: replace all mappings with a struct
+* Luis: add fee for usage of contract
 * Luis: This contract could mint new NFTs
 * Luis: Missing events (logged in blockchain?)
 * Luis: Investigate this repo:https://github.com/kaymen99/DecentralAirbnb
