@@ -52,7 +52,9 @@ Go to this FTM test faucet: https://faucet.fantom.network/
 
 Request FTM for the account you created in step 2
 ### 4. Now log in the FantomBNB DApp
-This is the link to FantomBNB DApp
+This is the link to FantomBNB DApp:
+
+https://fantombnb.vercel.app/
 
 ---
 ## Useful tools for testing
