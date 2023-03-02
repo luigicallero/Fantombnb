@@ -35,89 +35,24 @@ Here is a couple of links explaining how:
 `$ npm run start`
 
 ---
-## Settings for another Blockchains
-If running this Dapp against other blockchains, you will need to modify the following files
+## FantomBNB in Fantom Testnet Blockchain
 
-### 1. Add the appropiate blockchain information on the hardhat config file (hardhat.config.js)
+### 1. Configure Fantom Testnet in your metamask
 
-Before
-```
-require("@nomicfoundation/hardhat-toolbox");
+Metamask > Settings > Add a Network
 
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
-  solidity: "0.8.17",
-  networks: {
-  }
-};
+Complete the fields with the following information:
 
-```
-After
-```
-require('dotenv').config();
-require("@nomicfoundation/hardhat-toolbox");
+<img width="300" alt="Fantom Testnet in Metamask" src="images/metamask_fantomtestnet.png">
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+### 2. Create an account for Fantom Testnet in your metamask
+Metamask > Create Account
+### 3. Request test FTM
+Go to this FTM test faucet: https://faucet.fantom.network/
 
-/** @type import('hardhat/config').HardhatUserConfig */
-module.exports = {
-  solidity: "0.8.17",
-  networks: {
-    fantom_mainnet: {
-      url: `https://rpcapi.fantom.network`,
-      chainId: 250,
-      accounts: [`0x${PRIVATE_KEY}`]
-    },
-    fantom_testnet: {
-      //url: `https://rpc.testnet.fantom.network`,
-      url: `https://rpcapi-tracing.testnet.fantom.network`,
-      chainId: 4002,
-      accounts: [`0x${PRIVATE_KEY}`]
-    }
-  }
-};
-
-```
-Library dontenv is used to import private information from a hidden file named ".env"  (use .env_sample as template)
-
-Blockchain information should be provided by  Blockchain documentation, for Fantom you can find it here:
-    
-    https://github.com/Fantom-foundation/example-deployment
-
-### 2. Execute the deployment script pointing to new blockchain
-
-```
-npx hardhat run ./scripts/deploy.js --network BLOCKCHAIN
-```
-And copy the contracts addresses
-
-### 3. Copy Contracts json files to be used by frontend
-
-Copy contracts json files generated during deployment in step 2 from 
-
-    ./artifacts/contracts/FantomBNB.sol/FantomBNB.json
-    ./artifacts/contracts/Escrow.sol/Escrow.json
-
-to 
-
-    ./src/abis/
-
-### 4. Update Contracts addresses to be used by frontend
-
-Update file ./src/config.json with corresponding network ID and with contract addresses copied in step 2 
-
-```
-{
-    "31337": {
-        "fantomBNB": {
-            "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
-        },
-        "escrow": {
-            "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
-        }
-    }
-}
-```
+Request FTM for the account you created in step 2
+### 4. Now log in the FantomBNB DApp
+This is the link to FantomBNB DApp
 
 ---
 ## Useful tools for testing
@@ -134,8 +69,6 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 
 
 ## To Dos:
-* Juan: Update code with public google API
-* Juan: Update Houses with correct prices from Rent Contract
 * Juan: Search filter to work with NFT
 * Esteban: Dapp Wiki Web: Dapp link (when hosted in server) and Github Repo Link
 * Luis & Juan: Update the Home.js react component with correct information

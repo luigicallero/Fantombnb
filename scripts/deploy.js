@@ -11,8 +11,9 @@ const tokens = (n) => {
 }
 
 async function main() {
-  // Setup accounts
-  const [contractCreator, houseOwner, buyer] = await ethers.getSigners()
+  // Setup account
+  const accounts = await ethers.getSigners()
+  const houseOwner = accounts[0]
 
   // Deploy FantomBNB
   const FantomBNB = await ethers.getContractFactory('FantomBNB')
@@ -31,7 +32,7 @@ async function main() {
   const RentFantomBNB = await ethers.getContractFactory('RentFantomBNB')
   const rentfantombnb = await RentFantomBNB.deploy(
     fantombnb.address,
-    contractCreator.address,
+    houseOwner.address,
   )
   await rentfantombnb.deployed()
 

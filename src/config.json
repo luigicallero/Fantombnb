@@ -6,5 +6,13 @@
         "rentfantombnb": {
             "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
         }
+    },
+    "4002": {
+        "fantombnb": {
+            "address": "0x25826b098F12cb6EA5D4e6368a8F54a242acC515"
+        },
+        "rentfantombnb": {
+            "address": "0x3Aba171F00c93e886c3b729EeE3216F9a68B3C4B"
+        }
     }
 }

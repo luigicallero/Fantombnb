@@ -1,7 +1,7 @@
 require('dotenv').config();
 require("@nomicfoundation/hardhat-toolbox");
 
-const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const PRIVATE_KEY = process.env.PRIVATE_KEY || '0000000000000000000000000000000000000000000000000000000000000000';
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -10,13 +10,13 @@ module.exports = {
     fantom_mainnet: {
       url: `https://rpcapi.fantom.network`,
       chainId: 250,
-      //accounts: [`0x${PRIVATE_KEY}`]
+      accounts: [`0x${PRIVATE_KEY}`]
     },
     fantom_testnet: {
       //url: `https://rpc.testnet.fantom.network`,
       url: `https://rpcapi-tracing.testnet.fantom.network`,
       chainId: 4002,
-      //accounts: [`0x${PRIVATE_KEY}`]
+      accounts: [`0x${PRIVATE_KEY}`]
     }
   }
 };
