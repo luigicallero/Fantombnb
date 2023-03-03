@@ -1,16 +1,16 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
-import close from '../assets/close.svg';
+import close from '../assets/close.svg'; //????
 
 const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
     const [hasDeposited, setHasDeposited] = useState(false)
     const [hasRented, setHasRented] = useState(false)
-//    const [hasInspected, setHasInspected] = useState(false)
-
+    const [hasPaidRentPrice, sethasPaidRentPrice] = useState(false)
+    
     const [potentialRenter, setPotentialRenter] = useState(null)
+    const [renter, setRenter] = useState(null)
     const [houseOwner, setHouseOwner] = useState(null)
-    const [rented, setRented] = useState(null)
 
     const fetchDetails = async () => {
 
@@ -24,25 +24,26 @@ console.log("Potential Renter: ", potentialRenter)
         setHouseOwner(houseOwner)
 console.log("House Owner: ", houseOwner)
 
-        const hasRented = await rentfantombnb.approval(home.id, potentialRenter)
-        setHasRented(hasRented)
+//         const hasRented = await rentfantombnb.approval(home.id, potentialRenter) // check variables
+//         setHasRented(hasRented)
+// console.log(hasRented)
 
     }
 
     const fetchRented = async () => {
-        if (await rentfantombnb.isForRent(home.id)) return
+        if (await rentfantombnb.renter(home.id) !== null ) return
 
-        const rented = await rentfantombnb.potentialRenter(home.id)
-        setRented(rented)
-console.log("House rented by ",rented)
+        const renter = await rentfantombnb.renter(home.id)
+        setRenter(renter)
+console.log("House rented by ",renter)
     }
 
-    const depositHandler = async () => {
-        const depositPrice = await rentfantombnb.depositPrice(home.id)
+    const sendRentDepositHandler = async () => {
+        const depositPrice = await rentfantombnb.rentDepositPrice(home.id)
         const signer = await provider.getSigner()
-
+        console.log(ethers.utils.formatEther(depositPrice.toString()))
         // Renter sends deposit price
-        let transaction = await rentfantombnb.connect(signer).setDepositPrice(home.id, { value: depositPrice })
+        let transaction = await rentfantombnb.connect(signer).sendRentDeposit(home.id, { value: depositPrice })
         await transaction.wait()
 
         // // Buyer approves...
@@ -50,6 +51,28 @@ console.log("House rented by ",rented)
         // await transaction.wait()
 
         setHasDeposited(true)
+    }
+
+    const sendRentPriceHandler = async () => {
+        const depositPrice = await rentfantombnb.rentDepositPrice(home.id)
+        const signer = await provider.getSigner()
+        console.log(ethers.utils.formatEther(depositPrice.toString()))
+        // Renter sends deposit price
+        let transaction = await rentfantombnb.connect(signer).sendRentDeposit(home.id, { value: depositPrice })
+        await transaction.wait()
+
+        // // Buyer approves...
+        // transaction = await rentfantombnb.connect(signer).approveRent(home.id)
+        // await transaction.wait()
+
+        sethasPaidRentPrice(true)
+    }
+
+    const cancelHandler = async () => {
+        const signer = await provider.getSigner()
+        let transaction = await rentfantombnb.connect(signer).cancelRent(home.id)
+        await transaction.wait()
+        // Returns deposit to potential renter
     }
 
     const rentHandler = async () => {
@@ -88,29 +111,27 @@ console.log("House rented by ",rented)
 
                     <h2>{home.price} FTM</h2>
 
-                    {rented ? (
+                    {renter ? (
                         <div className='home__owned'>
-                            Owned by {houseOwner.slice(0, 6) + '...' + houseOwner.slice(38, 42)}
+                            Rented by {renter.slice(0, 6) + '...' + renter.slice(38, 42)}
                         </div>
                     ) : (
                         <div>
                             {(account === potentialRenter) ? (
-                                <button className='home__buy' onClick={depositHandler} disabled={hasDeposited}>
-                                    Pay Deposit
+                                <button className='home__buy' onClick={sendRentPriceHandler} disable={hasPaidRentPrice}>
+                                    Pay Rest of Rent
                                 </button>
                             ) : (account === houseOwner) ? (
-                                <button className='home__buy' onClick={rentHandler} disabled={hasRented}>
-                                    Approve Renter
-                                </button>
+                                <><button className='home__buy' onClick={rentHandler} disable>
+                                            Approve Renter
+                                        </button><button className='home__contact' onClick={cancelHandler} disable>
+                                                CANCEL Rent
+                                            </button></>
                             ) : (
-                                <button className='home__buy' onClick={rentHandler} disabled={hasRented}>
-                                    Rent
+                                <button className='home__buy' onClick={sendRentDepositHandler} disable={hasDeposited}>
+                                    Pay Deposit for Rent
                                 </button>
                             )}
-
-                            <button className='home__contact'>
-                                Contact agent
-                            </button>
                         </div>
                     )}
 

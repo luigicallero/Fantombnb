@@ -24,7 +24,7 @@ async function main() {
   console.log(`Minting 6 properties...\n`)
 
   for (let i = 0; i < 6; i++) {
-    const transaction = await fantombnb.connect(houseOwner).mint(`https://dweb.link/ipfs/QmaWoVgtT6b7Bv2ZACnFtdbmits2bSMK1Grhh1fhGJSB3Z/${i + 1}.json`)
+    const transaction = await fantombnb.connect(houseOwner).mint(`https://ipfs.io/ipfs/QmaWoVgtT6b7Bv2ZACnFtdbmits2bSMK1Grhh1fhGJSB3Z/${i + 1}.json`)
     await transaction.wait()
   }
 

@@ -97,7 +97,7 @@ contract RentFantomBNB {
     // -> Refund potential renter
     // -> Reset potential renter address for this nft
     function cancelRent(uint256 _nftID) public onlyHouseOwner(_nftID){
-        payable(renter[_nftID]).transfer(balance[_nftID][potentialRenter[_nftID]]);
+        payable(potentialRenter[_nftID]).transfer(balance[_nftID][potentialRenter[_nftID]]);
         potentialRenter[_nftID] = 0x0000000000000000000000000000000000000000;
     }
 
