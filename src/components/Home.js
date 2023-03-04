@@ -54,11 +54,11 @@ console.log("House rented by ",renter)
     }
 
     const sendRentPriceHandler = async () => {
-        const depositPrice = await rentfantombnb.rentDepositPrice(home.id)
+        const rentPrice = await rentfantombnb.rentDepositPrice(home.id)
         const signer = await provider.getSigner()
-        console.log(ethers.utils.formatEther(depositPrice.toString()))
-        // Renter sends deposit price
-        let transaction = await rentfantombnb.connect(signer).sendRentDeposit(home.id, { value: depositPrice })
+        console.log(ethers.utils.formatEther(rentPrice.toString()))
+        // Renter sends Rent price
+        let transaction = await rentfantombnb.connect(signer).sendRentPrice(home.id, { value: rentPrice })
         await transaction.wait()
 
         // // Buyer approves...
