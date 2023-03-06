@@ -98,12 +98,14 @@ contract RentFantomBNB {
     // -> Set balance of NFT back to zero
     // -> Refund potential renter
     // -> Reset potential renter address for this nft
+    // -> Set house for Rent again
     function cancelRent(uint256 _nftID) public onlyHouseOwner(_nftID){
         require(balance[_nftID][potentialRenter[_nftID]] > 0, "All money for this NFT has already been returned or no balance for this NFT");
         uint nft_balance = balance[_nftID][potentialRenter[_nftID]];
         balance[_nftID][potentialRenter[_nftID]] = 0;
         payable(potentialRenter[_nftID]).transfer(nft_balance);
         potentialRenter[_nftID] = 0x0000000000000000000000000000000000000000;
+        isForRent[_nftID] = true;
     }
 
     receive() external payable {}

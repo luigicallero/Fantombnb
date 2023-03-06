@@ -6,7 +6,7 @@ import close from '../assets/close.svg'; //????
 const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
     const [hasDeposited, setHasDeposited] = useState(false)
     const [hasRented, setHasRented] = useState(false)
-    const [hasPaidRentPrice, sethasPaidRentPrice] = useState(false)
+    const [hasPaidRentPrice, setHasPaidRentPrice] = useState(false)
     const [hasApproved, setHasApproved] = useState(false)
     
     const [potentialRenter, setPotentialRenter] = useState(null)
@@ -32,46 +32,26 @@ console.log("House Owner: ", houseOwner)
     }
 
     const fetchRented = async () => {
+        const renter1 = await rentfantombnb.renter(home.id)
+        console.log("Current Renter: ",renter1)
         if (await rentfantombnb.renter(home.id) !== null ) return
 
         const renter = await rentfantombnb.renter(home.id)
         setRenter(renter)
-console.log("House rented by ",renter)
+        console.log("House rented by ",renter)
     }
 
     const sendRentDepositHandler = async () => {
         const depositPrice = await rentfantombnb.rentDepositPrice(home.id)
         const signer = await provider.getSigner()
-        console.log(ethers.utils.formatEther(depositPrice.toString()))
+        console.log("cost of deposit ", home.id, ethers.utils.formatEther(depositPrice.toString()))
         // Renter sends deposit price
         let transaction = await rentfantombnb.connect(signer).sendRentDeposit(home.id, { value: depositPrice })
         await transaction.wait()
 
-        // // Buyer approves...
-        // transaction = await rentfantombnb.connect(signer).approveRent(home.id)
-        // await transaction.wait()
-
         setHasDeposited(true)
     }
-
-    const sendRentPriceHandler = async () => {
-        const rentPrice = await rentfantombnb.rentDepositPrice(home.id)
-        const signer = await provider.getSigner()
-        console.log(ethers.utils.formatEther(rentPrice.toString()))
-        // Renter sends Rent price
-        let transaction = await rentfantombnb.connect(signer).sendRentPrice(home.id, { value: rentPrice })
-        await transaction.wait()
-
-        sethasPaidRentPrice(true)
-    }
-
-    const cancelHandler = async () => {
-        const signer = await provider.getSigner()
-        let transaction = await rentfantombnb.connect(signer).cancelRent(home.id)
-        await transaction.wait()
-        // Returns deposit to potential renter
-    }
-
+    
     const approveRentHandler = async () => {
         const signer = await provider.getSigner()
         console.log("Before approving Is approved: ",hasApproved)
@@ -83,15 +63,34 @@ console.log("House rented by ",renter)
         console.log("After approving Is approved: ",hasApproved)
     }
 
-    // const FinalizeRentHandler = async () => {
-    //     const signer = await provider.getSigner()
+    const sendRentPriceHandler = async () => {
+        const rentPrice = await rentfantombnb.rentPrice(home.id)
+        const signer = await provider.getSigner()
+        console.log(ethers.utils.formatEther(rentPrice.toString()))
+        // Renter sends Rent price
+        let transaction = await rentfantombnb.connect(signer).sendRentPrice(home.id, { value: rentPrice })
+        await transaction.wait()
 
-    //     // HouseOwner finalize...
-    //     transaction = await rentfantombnb.connect(signer).finalizeRent(home.id)
-    //     await transaction.wait()
+        setHasPaidRentPrice(true)
+    }
+    
+    const FinalizeRentHandler = async () => {
+        const signer = await provider.getSigner()
 
-    //     setHasRented(true)
-    // }
+        // HouseOwner finalize...
+        let transaction = await rentfantombnb.connect(signer).finalizeRent(home.id)
+        await transaction.wait()
+
+        setHasRented(true)
+    }
+
+    const cancelHandler = async () => {
+        const signer = await provider.getSigner()
+        let transaction = await rentfantombnb.connect(signer).cancelRent(home.id)
+        await transaction.wait()
+        // Returns deposit to potential renter
+    }
+
     
     useEffect(() => {
         fetchDetails()
@@ -123,14 +122,23 @@ console.log("House rented by ",renter)
                         <div>
                             {(account === potentialRenter) ? (
                                 <button className='home__buy' onClick={sendRentPriceHandler} disable={hasPaidRentPrice}>
-                                    Pay Rest of Rent
+                                    Pay 1st Month Rent
                                 </button>
-                            ) : (account === houseOwner) ? (
+                            ) : (account === houseOwner && !hasPaidRentPrice ) ? (
+                                console.log("Rent paid: ",hasPaidRentPrice),
                                 <><button className='home__buy' onClick={approveRentHandler} disable={hasApproved}>
-                                            Approve Renter
-                                        </button><button className='home__contact' onClick={cancelHandler} disable>
-                                                CANCEL Rent
-                                            </button></>
+                                    Approve Renter
+                                </button>
+                                <button className='home__contact' onClick={cancelHandler} disable>
+                                    CANCEL Rent
+                                </button></>
+                            ) : (account === houseOwner && hasPaidRentPrice ) ? (
+                                <><button className='home__buy' onClick={FinalizeRentHandler} disable={hasRented}>
+                                    Finalize Rent
+                                </button>
+                                <button className='home__contact' onClick={cancelHandler} disable>
+                                    CANCEL Rent
+                                </button></>
                             ) : (
                                 <button className='home__buy' onClick={sendRentDepositHandler} disable={hasDeposited}>
                                     Pay Deposit for Rent

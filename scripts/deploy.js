@@ -46,13 +46,13 @@ async function main() {
   }
 
   // Setting properties for Rent...
-  transaction = await rentfantombnb.connect(houseOwner).setForRent(1, tokens(20), tokens(10))
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(1, tokens(10), tokens(20))
   await transaction.wait()
 
-  transaction = await rentfantombnb.connect(houseOwner).setForRent(2, tokens(15), tokens(5))
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(2, tokens(5), tokens(15))
   await transaction.wait()
 
-  transaction = await rentfantombnb.connect(houseOwner).setForRent(3, tokens(10), tokens(5))
+  transaction = await rentfantombnb.connect(houseOwner).setForRent(3, tokens(5), tokens(10))
   await transaction.wait()
 
   transaction = await rentfantombnb.connect(houseOwner).setForRent(4, tokens(6), tokens(12))

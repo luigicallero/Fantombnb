@@ -75,6 +75,7 @@ https://www.youtube.com/watch?v=cGQHXmCS94M&t=8657s
 * Juan: Search filter to work with NFT
 * Juan: default picture in card when json/image is not loading from IPFS
 * Luis & Juan: Update the Home.js react component with correct information
+* Luis: Show Cost of Deposit and Cost of Rent
 * Luis: "Contracts for the project must be deployed, verified, and publicly readable"
 * Luis: Message: "connect your metamask to fantom blockchain to display properties information"
 
