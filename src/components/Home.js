@@ -7,6 +7,7 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
     const [hasDeposited, setHasDeposited] = useState(false)
     const [hasRented, setHasRented] = useState(false)
     const [hasPaidRentPrice, sethasPaidRentPrice] = useState(false)
+    const [hasApproved, setHasApproved] = useState(false)
     
     const [potentialRenter, setPotentialRenter] = useState(null)
     const [renter, setRenter] = useState(null)
@@ -61,10 +62,6 @@ console.log("House rented by ",renter)
         let transaction = await rentfantombnb.connect(signer).sendRentPrice(home.id, { value: rentPrice })
         await transaction.wait()
 
-        // // Buyer approves...
-        // transaction = await rentfantombnb.connect(signer).approveRent(home.id)
-        // await transaction.wait()
-
         sethasPaidRentPrice(true)
     }
 
@@ -75,20 +72,27 @@ console.log("House rented by ",renter)
         // Returns deposit to potential renter
     }
 
-    const rentHandler = async () => {
+    const approveRentHandler = async () => {
         const signer = await provider.getSigner()
-
+        console.log("Before approving Is approved: ",hasApproved)
         // HouseOwner approves...
         let transaction = await rentfantombnb.connect(signer).approveRent(home.id)
         await transaction.wait()
 
-        // HouseOwner finalize...
-        transaction = await rentfantombnb.connect(signer).finalizeRent(home.id)
-        await transaction.wait()
-
-        setHasRented(true)
+        setHasApproved(true)
+        console.log("After approving Is approved: ",hasApproved)
     }
 
+    // const FinalizeRentHandler = async () => {
+    //     const signer = await provider.getSigner()
+
+    //     // HouseOwner finalize...
+    //     transaction = await rentfantombnb.connect(signer).finalizeRent(home.id)
+    //     await transaction.wait()
+
+    //     setHasRented(true)
+    // }
+    
     useEffect(() => {
         fetchDetails()
         fetchRented()
@@ -122,7 +126,7 @@ console.log("House rented by ",renter)
                                     Pay Rest of Rent
                                 </button>
                             ) : (account === houseOwner) ? (
-                                <><button className='home__buy' onClick={rentHandler} disable>
+                                <><button className='home__buy' onClick={approveRentHandler} disable={hasApproved}>
                                             Approve Renter
                                         </button><button className='home__contact' onClick={cancelHandler} disable>
                                                 CANCEL Rent
