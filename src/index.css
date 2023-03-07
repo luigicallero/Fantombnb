@@ -144,7 +144,7 @@ header {
 }
 .cards {
   display: flex;
-  gap: 5px;
+  gap: 8px;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
   margin-top: 20px;  
   z-index: 0;
@@ -157,10 +157,11 @@ header {
   cursor: pointer;
   position: relative;
   border-radius: 15px;
-  transition: all 250ms ease;
+  transition: all 250ms;
 }
 .card:hover {
   box-shadow: 1px 1px 5px var(--clr-grey);
+  scale: 1.1;
 }
 .card__image {
   position: absolute;
