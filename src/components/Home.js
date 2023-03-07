@@ -106,7 +106,7 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
 
     return (
         <div className="home">
-            <div className='home__details'>
+            <div className='home__details' onMouseLeave={togglePop}>
                 <div className="home__image">
                     <img src={home.image} alt="Home" />
                 </div>
