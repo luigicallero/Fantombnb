@@ -5,7 +5,6 @@
   padding: 0;
   box-sizing: border-box;
 }
-
 :root {
   --clr-white: #FFFFFF;
   --clr-black: #202020;
@@ -14,14 +13,12 @@
   --clr-blue-2: #4c46b6;
   --clr-green: #4fb646;
 }
-
 body {
   margin: 0;
   font-family: "Open Sans";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 /* ------------------------------------------------------ */
 /* -- NAVIGATION -- */
 
@@ -31,25 +28,21 @@ nav {
   align-items: center;
   height: 120px;
 }
-
 .nav__brand {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
 }
-
 .nav__brand img {
   max-width: 125px;
   height: auto;
 }
-
 .nav__brand h1 {
   color: var(--clr-blue);
   font-size: 2.5em;
   font-weight: 800;
 }
-
 .nav__links {
   display: flex;
   justify-content: center;
@@ -57,22 +50,18 @@ nav {
 
   list-style: none;
 }
-
 .nav__links li {
   margin: 0 15px;
 }
-
 .nav__links li a {
   text-decoration: none;
   color: var(--clr-black);
   font-weight: bolder;
   cursor: pointer;
 }
-
 .nav__links li a:hover {
   color: var(--clr-blue-2);
 }
-
 .nav__connect {
   width: 175px;
   height: 50px;
@@ -91,7 +80,6 @@ nav {
   cursor: pointer;
   transition: all 250ms ease;
 }
-
 .nav__connect:hover {
   background-color: var(--clr-blue-2);
 }
@@ -111,7 +99,6 @@ header {
 
   position: relative;
 }
-
 .header__title {
   position: absolute;
   top: 25%;
@@ -124,7 +111,6 @@ header {
   width: 100%;
   text-align: center;
 }
-
 .header__search {
   padding: 25px;
   min-width: 40%;
@@ -135,13 +121,11 @@ header {
   transform: translate(-50%, -50%);
   border-radius: 15px;
 }
-
 .header__search::placeholder {
   font-family: "Open Sans";
   font-size: 1.25em;
   font-weight: 600;
 }
-
 .header__search:hover {
   outline: 1px solid var(--clr-blue);
 }
@@ -155,76 +139,63 @@ header {
   padding: 0 40px;
   color: whitesmoke;
 }
-
 .cards__section h3 {
   margin: 8px 0 20px;
 }
-
 .cards {
   display: flex;
-  gap: 10px;
+  gap: 5px;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
-  margin-top: 20px;
-  
+  margin-top: 20px;  
   z-index: 0;
 }
-
 .card {
-  width: 350px;
-  height: 275px;
-
+  width: 400px;
+  height: 275px;  
   border: 1px solid var(--clr-black);
   margin: 10px auto;
-
   cursor: pointer;
   position: relative;
   border-radius: 15px;
   transition: all 250ms ease;
 }
-
 .card:hover {
   box-shadow: 1px 1px 5px var(--clr-grey);
 }
-
 .card__image {
   position: absolute;
   width: 100%;
   border: 1px solid #202020;
   border-radius: 10px;
 }
-
 .card__image img {
   max-width: 100%;
   height: 148px;
   border-radius: 10px 10px 0 0;
 }
-
 .card__info {
   width: 100%;
   height: 45%;
   background-color: var(--clr-white);
-  padding: 5px 10px;
+  padding: 5px 5px;
   position: absolute;
   bottom: 0;
   left: 0;
   border-radius: 0 0 10px 10px;
 }
-
 .card__info h4 {
   font-family: "Open Sans";
   font-size: 1.25em;
   font-weight: 600;
   color: #202020;
 }
-
 .card__info h5 {
   font-family: "Open Sans";
   font-size: 0.75em;
   font-weight: 600;
   color: #202020;
-  text-align: center;
+  text-align:left;
 }
-
 .card__info p {
   font-family: "Open Sans";
   font-size: 0.70em;
@@ -245,7 +216,6 @@ header {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 .home__details {
   display: grid;
   /* grid-template-columns: repeat(2, 1fr); */
@@ -265,16 +235,13 @@ header {
 
   background: var(--clr-white);
 }
-
 .home__image {
   max-width: 500px;
   margin: 20px auto;
 }
-
 .home__image img {
   max-width: 100%;
 }
-
 .home__close {
   position: absolute;
   top: 10px;
@@ -288,12 +255,10 @@ header {
 
   cursor: pointer;
 }
-
 .home__close img {
   width: 25px;
   height: 25px;
 }
-
 .home__overview {
   height: 100%;
   margin: 0 20px;
@@ -301,17 +266,14 @@ header {
 
   overflow-y: scroll;
 }
-
 .home__overview h1,
 .home__overview h2,
 .home__overview hr {
   margin: 10px auto;
 }
-
 .home__overview ul {
   margin-left: 40px;
 }
-
 .home__buy,
 .home__contact,
 .home__owned {
@@ -330,16 +292,13 @@ header {
   cursor: pointer;
   transition: all 250ms ease;
 }
-
 .home__buy {
   width: 225px;
   height: 50px;
 }
-
 .home__buy:hover {
   background-color: var(--clr-blue-2);
 }
-
 .home__contact {
   width: 150px;
   height: 50px;
@@ -349,12 +308,10 @@ header {
 
   border: 1px solid var(--clr-blue);
 }
-
 .home__contact:hover {
   background-color: #f7f7f7;
   color: var(--clr-blue-2);
 }
-
 .home__owned {
   height: 50px;
   background-color: var(--clr-green);

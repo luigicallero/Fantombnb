@@ -84,8 +84,8 @@ function App() {
                   <img src={home.image} alt="Home" />
                 </div>
                 <div className='card__info'>
-                  <h5>Montly Rent Price: {home.price} FTM</h5>
-                  <h5>Deposit Price: {home.depositPrice} FTM</h5>
+                  <h5><strong>Montly Rent Price: </strong>{home.price} FTM</h5>
+                  <h5><strong>Deposit Price:</strong> {home.depositPrice} FTM</h5>
                   <p>
                     <strong>{home.attributes[1].value}</strong> bds |
                     <strong>{home.attributes[2].value}</strong> ba |
