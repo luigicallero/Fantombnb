@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 
-import close from '../assets/close.svg'; //????
+import close from '../assets/close.svg';
 
 const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
     const [hasDeposited, setHasDeposited] = useState(false)
@@ -30,7 +30,7 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
         const total_paid = await rentfantombnb.getNFTBalance(home.id)
         if(parseFloat(total_paid.toString()) >= (parseFloat(depositPrice.toString()) + parseFloat(rentPrice.toString()))){
             setHasPaidRentPrice(true)
-            console.log("Paid rent price:",hasPaidRentPrice)
+            //console.log("Paid rent price:",hasPaidRentPrice)
         }
         
         // -- Renter
@@ -42,19 +42,17 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
     }
 
     const fetchRenter = async () => {
-        const renter1 = await rentfantombnb.renter(home.id)
-        console.log("Current Renter: ",renter1)
         if (await rentfantombnb.renter(home.id) !== null ) return
-
-        const renter = await rentfantombnb.renter(home.id)
-        setRenter(renter)
-        console.log("House rented by ",renter)
+            const renter = await rentfantombnb.renter(home.id)
+            setRenter(renter)
+            console.log("House rented by ",renter)
     }
 
     const sendRentDepositHandler = async () => {
         const depositPrice = await rentfantombnb.rentDepositPrice(home.id)
         const signer = await provider.getSigner()
         //console.log("cost of deposit ", home.id, ethers.utils.formatEther(depositPrice.toString()))
+        
         // Renter sends deposit price
         let transaction = await rentfantombnb.connect(signer).sendRentDeposit(home.id, { value: depositPrice })
         await transaction.wait()
@@ -64,19 +62,18 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
     
     const approveRentHandler = async () => {
         const signer = await provider.getSigner()
-        //console.log("Before approving Is approved: ",hasApproved)
         // HouseOwner approves...
         let transaction = await rentfantombnb.connect(signer).approveRent(home.id)
         await transaction.wait()
 
         setHasApproved(true)
-        console.log("After approving Is approved: ",hasApproved)
     }
 
     const sendRentPriceHandler = async () => {
         const rentPrice = await rentfantombnb.rentPrice(home.id)
         const signer = await provider.getSigner()
-        console.log(ethers.utils.formatEther(rentPrice.toString()))
+        // console.log(ethers.utils.formatEther(rentPrice.toString()))
+        
         // Renter sends Rent price
         let transaction = await rentfantombnb.connect(signer).sendRentPrice(home.id, { value: rentPrice })
         await transaction.wait()
@@ -122,7 +119,8 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
                     </p>
                     <p>{home.address}</p>
 
-                    <h2>{home.price} FTM</h2>
+                    <h2>Montly Rent Price: {home.price} FTM</h2>
+                    <h2>Deposit Price: {home.depositPrice} FTM</h2>
 
                     {renter ? (
                         <div className='home__owned'>
