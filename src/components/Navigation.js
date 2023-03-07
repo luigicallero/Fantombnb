@@ -11,7 +11,7 @@ const Navigation = ({ account, setAccount }) => {
     return (
         <nav>
             <ul className='nav__links'>
-                <li><a href="https://sites.google.com/view/hackathon1q2023fantombnb/fantombnb?authuser=0" target={'_blank'}>About</a></li>
+                <li><a href="https://sites.google.com/view/hackathon1q2023fantombnb/fantombnb?authuser=0" rel="noreferrer" target={'_blank'}>About</a></li>
                 
             </ul>
 

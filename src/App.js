@@ -77,7 +77,7 @@ function App() {
           <hr />
           <div className='cards'>
             {homes.map((home, index) => (
-              <div className='card' key={index} onClick={() => togglePop(home)}>
+              <div className='card' key={index} onClick={() => togglePop(home)} value={home.address}>
                 <div className='card__image'>
                   <img src={home.image} alt="Home" />
                 </div>
