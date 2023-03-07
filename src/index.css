@@ -162,6 +162,7 @@ header {
 .card:hover {
   box-shadow: 1px 1px 5px var(--clr-grey);
   scale: 1.1;
+  z-index: 3;
 }
 .card__image {
   position: absolute;
