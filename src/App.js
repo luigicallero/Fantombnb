@@ -44,7 +44,9 @@ function App() {
     
     for (let index = 0; index < homes.length; index++) {
       const rentPrice = await rentfantombnb.rentPrice(index + 1)
+      const rentDepositPrice = await rentfantombnb.rentDepositPrice(index + 1)
       homes[index].price = ethers.utils.formatEther(rentPrice.toString())
+      homes[index].depositPrice = ethers.utils.formatEther(rentDepositPrice.toString())
     }
     
     setHomes(homes)
@@ -82,7 +84,8 @@ function App() {
                   <img src={home.image} alt="Home" />
                 </div>
                 <div className='card__info'>
-                  <h4>{home.price} FTM</h4>
+                  <h5>Montly Rent Price: {home.price} FTM</h5>
+                  <h5>Deposit Price: {home.depositPrice} FTM</h5>
                   <p>
                     <strong>{home.attributes[1].value}</strong> bds |
                     <strong>{home.attributes[2].value}</strong> ba |

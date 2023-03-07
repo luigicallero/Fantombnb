@@ -217,9 +217,17 @@ header {
   color: #202020;
 }
 
+.card__info h5 {
+  font-family: "Open Sans";
+  font-size: 0.75em;
+  font-weight: 600;
+  color: #202020;
+  text-align: center;
+}
+
 .card__info p {
   font-family: "Open Sans";
-  font-size: 0.90em;
+  font-size: 0.70em;
   margin-top: 5px;
   color: #202020;
 }
