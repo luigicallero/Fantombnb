@@ -18,20 +18,32 @@ const Home = ({ home, provider, account, rentfantombnb, togglePop }) => {
         // -- Potential Renter
         const potentialRenter = await rentfantombnb.potentialRenter(home.id)
         setPotentialRenter(potentialRenter)
-console.log("Potential Renter: ", potentialRenter)
+        console.log("Potential Renter: ", potentialRenter)
 
         // -- HouseOwner
         const houseOwner = await rentfantombnb.houseOwner(home.id)
         setHouseOwner(houseOwner)
-console.log("House Owner: ", houseOwner)
+        console.log("House Owner: ", houseOwner)
 
-//         const hasRented = await rentfantombnb.approval(home.id, potentialRenter) // check variables
-//         setHasRented(hasRented)
-// console.log(hasRented)
-
+        const depositPrice = await rentfantombnb.rentDepositPrice(home.id)
+        const rentPrice = await rentfantombnb.rentPrice(home.id)
+        const total_paid = await rentfantombnb.getNFTBalance(home.id)
+        // console.log("deposit, rent and total paid: ",depositPrice.toString(),rentPrice.toString(),total_paid.toString())
+        // console.log("con float: ",parseFloat(depositPrice.toString()) + parseFloat(rentPrice.toString()))
+        if(parseFloat(total_paid.toString()) >= (parseFloat(depositPrice.toString()) + parseFloat(rentPrice.toString()))){
+            setHasPaidRentPrice(true)
+            console.log("Paid rent price:",hasPaidRentPrice)
+        }
+        
+        // -- Renter
+        const renter = await rentfantombnb.renter(home.id)
+        //setRenter(renter)
+        //if(renter=== '0x0000000000000000000000000000000000000000'){
+           // console.log("Renter: ",renter)
+            
     }
 
-    const fetchRented = async () => {
+    const fetchRenter = async () => {
         const renter1 = await rentfantombnb.renter(home.id)
         console.log("Current Renter: ",renter1)
         if (await rentfantombnb.renter(home.id) !== null ) return
@@ -71,7 +83,8 @@ console.log("House Owner: ", houseOwner)
         let transaction = await rentfantombnb.connect(signer).sendRentPrice(home.id, { value: rentPrice })
         await transaction.wait()
 
-        setHasPaidRentPrice(true)
+        //setHasPaidRentPrice(true)
+        //console.log("Paid rent price: ",hasPaidRentPrice)
     }
     
     const FinalizeRentHandler = async () => {
@@ -94,7 +107,7 @@ console.log("House Owner: ", houseOwner)
     
     useEffect(() => {
         fetchDetails()
-        fetchRented()
+        fetchRenter()
     }, [hasRented])
 
     return (
