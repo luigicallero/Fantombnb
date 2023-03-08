@@ -72,10 +72,10 @@ function App() {
   let homeCard  = document.querySelectorAll('#homeCard')
   const cambio = () =>{
     for (let index = 0; index < homeAddress.length; index++) {
-      if(homeAddress[index].innerHTML.toLowerCase().includes(header.value) != true || homeAddress[index].innerHTML.toUpperCase().includes(header.value) != true){
+      if(homeAddress[index].innerHTML.toLowerCase().includes(header.value) != true || homeAddress[index].innerHTML.toUpperCase().includes(header.value) != true || homeAddress[index].innerHTML.includes(header.value) != true){
         homeCard[index].style.visibility = "hidden"
       }
-      if(homeAddress[index].innerHTML.toLowerCase().includes(header.value) == true || homeAddress[index].innerHTML.toUpperCase().includes(header.value) == true){
+      if(homeAddress[index].innerHTML.toLowerCase().includes(header.value) == true || homeAddress[index].innerHTML.toUpperCase().includes(header.value) == true || homeAddress[index].innerHTML.includes(header.value) == true){
         homeCard[index].style.visibility = "visible"
       }
       
