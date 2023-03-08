@@ -145,7 +145,7 @@ header {
 .cards {
   display: flex;
   gap: 8px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
+  
   margin-top: 20px;  
   z-index: 0;
 }
