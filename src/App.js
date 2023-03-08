@@ -50,7 +50,7 @@ function App() {
     }
     
     setHomes(homes)
-    console.log(homes)
+    
 
     window.ethereum.on('accountsChanged', async () => {
       const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
@@ -67,6 +67,20 @@ function App() {
     setHome(home)
     toggle ? setToggle(false) : setToggle(true);
   }
+  let header = document.getElementById("header__title")
+  let homeAddress = document.querySelectorAll('#home_address')
+  let homeCard  = document.querySelectorAll('#homeCard')
+  const cambio = () =>{
+    for (let index = 0; index < homeAddress.length; index++) {
+      if(homeAddress[index].innerHTML.includes(header.value) != true){
+        homeCard[index].style.display = "none"
+      }
+      if(homeAddress[index].innerHTML.includes(header.value) == true){
+        homeCard[index].style.display = "block"
+      }
+      
+    }  
+  }
   
   return (
     <div>
@@ -74,12 +88,13 @@ function App() {
       
       <div id="container">
         <Search />
+        <input type="text" className="header__search" id="header__title" placeholder="Enter an address, neighborhood, city, or ZIP code" onChange={cambio}/>
         <div className='cards__section'>
           <h3>Homes For You</h3>
           <hr />
           <div className='cards'>
             {homes.map((home, index) => (
-              <div className='card' key={index} onClick={() => togglePop(home)} value={home.address}>
+              <div className='card' id='homeCard' key={index} onClick={() => togglePop(home)} value={home.address}>
                 <div className='card__image'>
                   <img src={home.image} alt="Home" />
                 </div>
@@ -91,7 +106,7 @@ function App() {
                     <strong>{home.attributes[2].value}</strong> ba |
                     <strong>{home.attributes[3].value}</strong> sqft
                   </p>
-                  <p>{home.address}</p>
+                  <p id='home_address'>{home.address}</p>
                 </div>
               </div>
             ))}
